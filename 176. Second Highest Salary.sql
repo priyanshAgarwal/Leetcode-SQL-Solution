@@ -26,8 +26,8 @@ SELECT (SELECT DISTINCT
 -- Use of Rank, Query took 854ms, Remember ISNULL is important in case there is no Data.
 -- Dense Rank is much more usefull here, because Dense Rank won't skip the number. 
 
-select ISNULL( (select salary from 
-(select  distinct salary, DENSE_RANK() over(ORDER BY SALARY DESC) as SAL from Employee) AS S_R 
-where S_R.sal=2) ,NULL) AS SecondHighestSalary ;
+SELECT ISNULL( (SELECT SALARY FROM 
+(SELECT  DISTINCT SALARY, DENSE_RANK() OVER(ORDER BY SALARY DESC) AS SAL_RANK from Employee) AS SR 
+WHERE SR.SAL_RANK=2) ,NULL) AS SecondHighestSalary ;
 
 
