@@ -16,7 +16,8 @@ In other words, there should be no "holes" between ranks.
 | 5  | 4.00  |
 | 6  | 3.65  |
 +----+-------+
-For example, given the above Scores table, your query should generate the following report (order by highest score):
+For example, given the above Scores table, your query should generate the following report 
+(order by highest score):
 
 +-------+---------+
 | score | Rank    |
@@ -29,3 +30,6 @@ For example, given the above Scores table, your query should generate the follow
 | 3.50  | 4       |
 +-------+---------+
 */
+
+
+SELECT SCORE, DENSE_RANK() OVER(ORDER BY SCORE DESC) AS RANK FROM SCORES
