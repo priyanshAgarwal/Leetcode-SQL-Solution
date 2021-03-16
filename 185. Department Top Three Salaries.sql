@@ -42,6 +42,11 @@ For the above tables, your SQL query should return the following rows (order of 
 ["Will", 70000, "IT", 3], ["Janet", 69000, "IT", 4],
  ["Henry", 80000, "Sales", 1],
  ["Sam", 60000, "Sales", 2]]}
+
+ Edge Case 
+ {"headers": {"Employee": ["Id", "Name", "Salary", "DepartmentId"],
+  "Department": ["Id", "Name"]},
+   "rows": {"Employee": [[1, "Joe", 10000, 1]], "Department": []}}
 */
 
 
@@ -57,7 +62,7 @@ FROM
         B.NAME AS DEPT_NAME, 
         DENSE_RANK() OVER(PARTITION BY B.Name ORDER BY A.Salary DESC) AS SALARY_RANK
         FROM EMPLOYEE A
-            LEFT JOIN DEPARTMENT B
+            INNER JOIN DEPARTMENT B --Use inner join edge case what if there is no department/single employee company
         ON A.DepartmentId=B.ID
     ) AS E_RANK
 WHERE E_RANK.SALARY_RANK<4; 
