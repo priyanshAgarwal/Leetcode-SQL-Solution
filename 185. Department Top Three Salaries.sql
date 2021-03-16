@@ -42,8 +42,6 @@ For the above tables, your SQL query should return the following rows (order of 
 ["Will", 70000, "IT", 3], ["Janet", 69000, "IT", 4],
  ["Henry", 80000, "Sales", 1],
  ["Sam", 60000, "Sales", 2]]}
-
-
 */
 
 
