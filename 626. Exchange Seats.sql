@@ -35,16 +35,14 @@ Note:
 
 If the number of students is odd, there is no need to change the last one's seat.
 
+{"headers": ["id", "student", "ID_NEW"],
+ "values": [[1, "Abbot", 2],
+            [2, "Doris", 1],
+            [3, "Emerson", 4],
+            [4, "Green", 3],
+            [5, "Jeames", 6]]}
 */
 
-SELECT L1.NUM AS ConsecutiveNums  
-FROM
-Logs L1,
-Logs L2,
-Logs L3
-WHERE L1.ID=L2.ID-1 -- First two lines are to get consecutive we have to do                    
-AND L2.ID=L3.ID-1   -- ID and next two lines to get the numbers
-AND L1.NUM=L2.NUM
-AND L2.NUM=L3.NUM;
 
-
+--Method 1 (Smart use of ROW_NUMBER())
+SELECT ROW_NUMBER() OVER( ORDER BY (IF(ID%2=1,id+1,ID-1))) AS ID, STUDENT FROM SEAT;
