@@ -64,4 +64,7 @@ Player 1 (Nadal) won 7 titles: Wimbledon (2018, 2019), Fr_open (2018, 2019, 2020
 Player 2 (Federer) won 5 titles: Wimbledon (2020), US_open (2019, 2020), and Au_open (2019, 2020).
 Player 3 (Novak) did not win anything, we did not include them in the result table.
 
+{"headers": ["YEAR", "SUM(Wimbledon)", "SUM(Fr_open)", "SUM(US_open)", "SUM(Au_open)"],
+"values": [[2018, 1, 1, 1, 1], [2019, 1, 1, 2, 2], [2020, 2, 1, 2, 2]]}
+
 */
