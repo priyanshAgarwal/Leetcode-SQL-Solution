@@ -102,14 +102,22 @@ Jerry (customer 4) only ordered the keyboard (one time), so that is the most frq
 John (customer 5) did not order anything, so we do not include them in the result table.
 */
 
-SELECT L1.NUM AS ConsecutiveNums  
-FROM
-Logs L1,
-Logs L2,
-Logs L3
-WHERE L1.ID=L2.ID-1 -- First two lines are to get consecutive we have to do                    
-AND L2.ID=L3.ID-1   -- ID and next two lines to get the numbers
-AND L1.NUM=L2.NUM
-AND L2.NUM=L3.NUM;
+with product_count AS (
+SELECT 
+    customer_id,
+    product_id,
+    COUNT(*) AS Product_Count
+FROM Orders
+GROUP BY customer_id, product_id
+ORDER BY customer_id),
+
+product_rank_table as(
+SELECT customer_id, product_id, DENSE_RANK() OVER(PARTITION BY Customer_id ORDER BY Product_Count DESC) AS PROCUCT_RANK FROM product_count
+)
+
+SELECT customer_id,P.product_id,P.product_name  FROM product_rank_table A
+LEFT JOIN Products P
+ON A.product_id=P.product_id
+WHERE PROCUCT_RANK=1 ;
 
 
