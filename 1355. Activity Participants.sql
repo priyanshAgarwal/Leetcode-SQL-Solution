@@ -1,4 +1,7 @@
 /*
+
+1355. Activity Participants
+
 Table: Friends
 
 +---------------+---------+
@@ -60,16 +63,37 @@ Result table:
 Eating activity is performed by 3 friends, maximum number of participants, (Jonathan D. , Elvis Q. and Daniel A.)
 Horse Riding activity is performed by 1 friend, minimum number of participants, (Bob B.)
 Singing is performed by 2 friends (Victor J. and Jade W.)
+
+{"headers": {"Friends": ["id", "name", "activity"], "Activities": ["id", "name"]}, "rows": 
+{"Friends": 
+    [[1, "Maria C.", "Eating"], 
+    [2, "Jade W.", "Horse Riding"], 
+    [3, "Jonathan D.", "Eating"], 
+    [4, "Claire C.", "Singing"], 
+    [5, "Will W.", "Eating"], 
+    [6, "Anna A.", "Horse Riding"], 
+    [7, "Daniel D.", "Singing"]],
+     "Activities": 
+    [[1, "Eating"], [2, "Singing"], [3, "Horse Riding"]]}}
+
 */
 
-SELECT L1.NUM AS ConsecutiveNums  
-FROM
-Logs L1,
-Logs L2,
-Logs L3
-WHERE L1.ID=L2.ID-1 -- First two lines are to get consecutive we have to do                    
-AND L2.ID=L3.ID-1   -- ID and next two lines to get the numbers
-AND L1.NUM=L2.NUM
-AND L2.NUM=L3.NUM;
+# Write your MySQL query statement below
 
+With activity_count AS (
+SELECT DISTINCT activity, COUNT(*) OVER(PARTITION BY ACTIVITY) AS NUM_PAR FROM FRIENDS),
 
+activity_max as (
+SELECT NUM_PAR FROM activity_count
+ORDER BY NUM_PAR DESC LIMIT 1    
+),
+
+activity_min as (
+SELECT NUM_PAR FROM activity_count
+    ORDER BY NUM_PAR
+LIMIT 1
+)
+
+SELECT activity AS activity FROM activity_count 
+WHERE NUM_PAR NOT IN (SELECT * FROM activity_max)
+AND NUM_PAR NOT IN (SELECT * FROM  activity_min); 
