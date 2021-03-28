@@ -97,4 +97,14 @@ screen's most recent order is in 2020-08-29, it was ordered only once this day.
 The hard disk was never ordered and we don't include it in the result table.
 */
 
+SELECT product_name, product_id, order_id, order_date
+FROM (
+    SELECT product_name, P.product_id, order_id, order_date, RANK() OVER (PARTITION BY product_name ORDER BY order_date DESC) rnk
+    FROM Orders O
+    JOIN Products P
+    On O.product_id = P.product_id
+) temp
+WHERE rnk = 1
+ORDER BY product_name, product_id, order_id
+
 
