@@ -112,7 +112,8 @@ GROUP BY customer_id, product_id
 ORDER BY customer_id),
 
 product_rank_table as(
-SELECT customer_id, product_id, DENSE_RANK() OVER(PARTITION BY Customer_id ORDER BY Product_Count DESC) AS PROCUCT_RANK FROM product_count
+SELECT customer_id, 
+    product_id, DENSE_RANK() OVER(PARTITION BY Customer_id ORDER BY Product_Count DESC) AS PROCUCT_RANK FROM product_count
 )
 
 SELECT customer_id,P.product_id,P.product_name  FROM product_rank_table A
