@@ -57,3 +57,12 @@ Result table:
 The customers who bought all the products (5 and 6) are customers with id 1 and 3.
 */
 
+-- Always put what you are counting, That will help you like DISTINCT C.product_key helped you here.
+
+SELECT CUSTOMER_ID 
+FROM CUSTOMER C
+INNER JOIN 
+PRODUCT P
+ON C.PRODUCT_KEY=P.PRODUCT_KEY
+GROUP BY CUSTOMER_ID
+HAVING COUNT(DISTINCT C.product_key)=(SELECT COUNT(*) FROM Product)
