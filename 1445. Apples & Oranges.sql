@@ -74,3 +74,28 @@ SELECT
 FROM Sales
 GROUP BY SALE_DATE;
 
+--Method 3
+WITH SALES_PIVOT AS ( 
+SELECT 
+    sale_date,  
+    sum(CASE WHEN FRUIT='apples' THEN sold_num END) AS APPLES,
+    sum(CASE WHEN FRUIT='oranges' THEN sold_num END) AS ORANGE
+    FROM sales   
+    GROUP BY sale_date)
+    
+SELECT sale_date, (APPLES-ORANGE) AS diff  FROM SALES_PIVOT;
+
+--Method 4 (Pivot Table)
+WITH SALES_PIVOT as(
+    select sale_date, apples, oranges
+    from Sales
+    PIVOT (
+        SUM(sold_num)
+        for fruit
+        in ([apples],[oranges])
+    ) AS PIVOT_TABLE        
+)
+
+select sale_date, apples-oranges as diff
+from SALES_PIVOT
+
