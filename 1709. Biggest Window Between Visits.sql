@@ -54,7 +54,9 @@ For the third user, the only window in question is between dates 2020-11-11 and 
 */
 
 with next_day AS(
-SELECT *, IFNULL(LEAD(visit_date ,1) OVER(PARTITION BY user_id ORDER BY visit_date),'2021-1-1') AS NEXT_DATE FROM UserVisits)
+SELECT *,
+ IFNULL(LEAD(visit_date ,1) OVER(PARTITION BY user_id ORDER BY visit_date),'2021-1-1') AS NEXT_DATE 
+ FROM UserVisits)
 
 -- You don't have to find rank to find the Max, you can simply group by and use the MAX function. 
 -- Import you use Rank where multiple row can have same rank.
