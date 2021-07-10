@@ -21,7 +21,13 @@ Given the Employee table, write a SQL query that finds out employees who earn mo
 
 */
 
-SELECT C.NAME AS Employee FROM (SELECT A.ID, A.Name, A.Salary, A.ManagerId, B.Name AS ManagerName, B.Salary AS ManagerSalary
+SELECT C.NAME AS Employee FROM (SELECT 
+    A.ID,
+    A.Name, 
+    A.Salary, 
+    A.ManagerId, 
+    B.Name AS ManagerName, 
+    B.Salary AS ManagerSalary
 FROM Employee A, Employee B
 WHERE A.ManagerId=B.ID
 AND A.SALARY>B.Salary) C;

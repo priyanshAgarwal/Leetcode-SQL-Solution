@@ -46,4 +46,6 @@ If the number of students is odd, there is no need to change the last one's seat
 
 --Method 1 (Smart use of ROW_NUMBER())
 
-SELECT ROW_NUMBER() OVER( ORDER BY (IF(ID%2=1,id+1,ID-1))) AS ID, STUDENT FROM SEAT;
+SELECT 
+    ROW_NUMBER() OVER(ORDER BY (IF(ID%2=1,id+1,ID-1))) AS ID,
+     STUDENT FROM SEAT;
