@@ -42,3 +42,31 @@ AND L1.NUM=L2.NUM
 AND L2.NUM=L3.NUM;
 
 
+/*
+Important thing here, a mistake I made. 
+Always use Lag function with column you want to see a LAG over a Unique ID.   
+My Mistake LAG(NUM,1) OVER(ORDER BY NUM) AS NUM_1
+
+Example - Mujhe Employee ki previous year salary chahiye, so I will put Salary in Lag function and then put 
+employee_id in OVER() function. 
+
+SELECT 
+	employee_id, 
+	fiscal_year, 
+	salary,
+	LAG(salary) OVER (
+		PARTITION BY employee_id 
+		ORDER BY fiscal_year) previous_salary
+FROM
+	basic_pays;
+
+*/
+SELECT DISTINCT A.NUM AS ConsecutiveNums FROM
+    (SELECT
+    NUM,
+    LAG(NUM,1) OVER(ORDER BY ID) AS NUM_1, 
+    LAG(NUM,2) OVER(ORDER BY ID) AS NUM_2 
+    FROM Logs
+    ) A
+    WHERE A.NUM=A.NUM_1 AND A.NUM_1=A.NUM_2;
+

@@ -122,7 +122,8 @@ LEFT JOIN Products P
 ON A.product_id=P.product_id
 WHERE PROCUCT_RANK=1 ;
 
-/* Good Point you can count() inside partiotion as well, was looking for this approach*/
+/* Good Point you can count() inside partiotion as well, was looking for this approach,
+ also remember to use group by when use count inide OVR() functiom*/
 SELECT B.Name FROM (SELECT CandidateId , DENSE_RANK() OVER(ORDER BY COUNT(CandidateId) DESC) AS vote_rank
 FROM Vote
 GROUP BY CandidateId) A

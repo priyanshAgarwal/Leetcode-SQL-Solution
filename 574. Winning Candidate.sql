@@ -41,3 +41,12 @@ from Vote
 Group by CandidateId  
 order by count(CandidateId) desc
 limit 1)
+
+
+SELECT B.NAME FROM (SELECT CandidateId, COUNT(*) AS VOTE_COUNT
+FROM VOTE 
+GROUP BY CandidateId 
+ORDER BY VOTE_COUNT DESC 
+LIMIT 1) A
+INNER JOIN Candidate B
+ON A.CandidateId=B.id
