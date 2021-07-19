@@ -55,10 +55,11 @@ The table is ordered by the turn for simplicity.
 | 6    | 1  | Winston   | 500    | ___          |
 +------+----+-----------+--------+--------------+
 
-["person_id", "person_name", "weight", "turn", "Weight_1"], 
-[5, "Alice", 250, 1, 350], 
-[3, "Alex", 350, 2, 400], 
-[6, "John Cena", 400, 3, 200], 
-[2, "Marie", 200, 4, 175], 
-[4, "Bob", 175, 5, 500], 
-[1, "Winston", 500, 6, null]
+Mistake - I was using Lag here, But SUM would have worked. 
+
+*/
+
+SELECT person_name FROM (SELECT *, SUM(WEIGHT) OVER(ORDER BY TURN) AS Total_Weight FROM QUEUE) A
+WHERE Total_Weight<=1000
+ORDER BY Total_Weight DESC
+LIMIT 1;

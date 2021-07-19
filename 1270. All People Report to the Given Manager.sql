@@ -54,6 +54,21 @@ The employees with employee_id 2 and 77 report their work directly to the head o
 The employee with employee_id 4 report his work indirectly to the head of the company 4 --> 2 --> 1. 
 The employee with employee_id 7 report his work indirectly to the head of the company 7 --> 4 --> 2 --> 1.
 The employees with employee_id 3, 8 and 9 don't report their work to head of company directly or indirectly. 
+
+Using a SQL Server recursive CTE to query hierarchical data (When there is hierarchy in the data use this)
+
+COUNT 1 TO 50
+WITH   cte
+AS     (SELECT 1 AS n -- anchor member
+        UNION ALL
+        SELECT n + 1 -- recursive member
+        FROM   cte
+        WHERE  n < 50 -- terminator
+       )
+SELECT n
+FROM   cte;
+
+
 */
 
 WITH CTE AS (
