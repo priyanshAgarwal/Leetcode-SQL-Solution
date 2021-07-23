@@ -102,6 +102,13 @@ Jerry (customer 4) only ordered the keyboard (one time), so that is the most frq
 John (customer 5) did not order anything, so we do not include them in the result table.
 */
 
+
+/*
+Query below could be used by partiotion by 
+SELECT DISTINCT customer_id, product_id, 
+COUNT(*) OVER(PARTITION BY customer_id, product_id) AS product_order_number FROM ORDERS;
+*/
+
 with product_count AS (
 SELECT 
     customer_id,
