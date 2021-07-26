@@ -100,4 +100,14 @@ Bob has two contacts, none of them is a trusted contact.
 Alex has one contact and it is a trusted contact (Alice).
 John doesn't have any contacts
 
+
+["box_ID", "chest_id", "apple_count", "orange_count"], 
+[2, null, null, null], 
+[18, 14, 20, 10], 
+[19, 3, 19, 4], 
+[12, 2, 8, 8], 
+[20, 6, 5, 6], 
+[8, 6, 5, 6], 
+[3, 14, 20, 10]
+
 */
