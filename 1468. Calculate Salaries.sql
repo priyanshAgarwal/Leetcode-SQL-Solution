@@ -84,7 +84,8 @@ ON A.company_id =B.company_id
 
 
 -- REMENBER WHEN USING ROUND WITH CASE 
--- THEN NAME OF WHOLE ROW IS OUTSIDE THE ROUND STATEMENT
+-- THEN NAME OF WHOLE ROW IS OUTSIDE THE ROUND STATEMENT (This is a nice approach as well)
+-- Partition Ke sath Case statement
 
 SELECT 
     company_id,
