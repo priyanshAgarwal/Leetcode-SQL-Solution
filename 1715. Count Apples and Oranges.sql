@@ -31,12 +31,8 @@ This table contains information about the chests we have, and the corresponding 
  
 
 Write an SQL query to count the number of apples and oranges in all the boxes. If a box contains a chest, you should also include the number of apples and oranges it has.
-
 Return the result table in any order.
-
 The query result format is in the following example:
-
- 
 
 Boxes table:
 +--------+----------+-------------+--------------+
