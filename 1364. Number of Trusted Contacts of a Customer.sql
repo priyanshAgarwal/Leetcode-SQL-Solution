@@ -109,5 +109,4 @@ John doesn't have any contacts
 [20, 6, 5, 6], 
 [8, 6, 5, 6], 
 [3, 14, 20, 10]
-
 */
