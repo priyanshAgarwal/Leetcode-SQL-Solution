@@ -66,7 +66,6 @@ The salary after taxes = salary - (taxes percentage / 100) * salary
 For example, Salary for Morninngcat (3, 15) after taxes = 7777 - 7777 * (24 / 100) = 7777 - 1866.48 = 5910.52, which is rounded to 5911.
 */
 
-# Write your MySQL query statement below
 
 WITH tax_multiplier AS (
 SELECT company_id,
@@ -82,3 +81,18 @@ SELECT
     ROUND((SALARY*(1-TAX_RATE)),0) AS SALARY FROM Salaries A 
 INNER JOIN tax_multiplier B
 ON A.company_id =B.company_id 
+
+
+-- REMENBER WHEN USING ROUND WITH CASE 
+-- THEN NAME OF WHOLE ROW IS OUTSIDE THE ROUND STATEMENT
+
+SELECT 
+    company_id,
+    employee_id,
+    employee_name,
+    ROUND(CASE
+        WHEN MAX(SALARY) OVER(PARTITION BY  COMPANY_ID)<1000 THEN SALARY
+        WHEN MAX(SALARY) OVER(PARTITION BY  COMPANY_ID) BETWEEN 1000 AND 10000 THEN SALARY*(1-0.24)
+        WHEN MAX(SALARY) OVER(PARTITION BY  COMPANY_ID) > 10000 THEN SALARY*(1-0.49)
+    END ,0) SALARY
+    FROM Salaries
