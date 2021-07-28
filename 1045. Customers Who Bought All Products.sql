@@ -66,3 +66,9 @@ PRODUCT P
 ON C.PRODUCT_KEY=P.PRODUCT_KEY
 GROUP BY CUSTOMER_ID
 HAVING COUNT(DISTINCT C.product_key)=(SELECT COUNT(*) FROM Product)
+
+
+SELECT customer_id FROM (SELECT customer_id, COUNT(DISTINCT product_key) AS Products_bought
+FROM Customer 
+GROUP BY customer_id 
+HAVING Products_bought = (SELECT COUNT(*) FROM Product)) A
