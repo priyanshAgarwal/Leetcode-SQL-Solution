@@ -56,6 +56,9 @@ Result table:
 | 200        | 2011       | 15       | 9000  |
 +------------+------------+----------+-------+
 
-
-
 */
+
+select product_id, year as first_year, quantity, price
+from(SELECT *, DENSE_RANK() OVER(PARTITION BY product_id ORDER BY YEAR) AS FIRST_YEAR
+FROM Sales) as tbl
+where FIRST_YEAR = 1
