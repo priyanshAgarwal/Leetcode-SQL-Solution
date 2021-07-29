@@ -12,6 +12,7 @@ Table: Sales
 | quantity    | int   |
 | price       | int   |
 +-------------+-------+
+
 sale_id is the primary key of this table.
 product_id is a foreign key to Product table.
 Note that the price is per unit.
