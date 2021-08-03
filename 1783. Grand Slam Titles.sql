@@ -68,3 +68,18 @@ Player 3 (Novak) did not win anything, we did not include them in the result tab
 "values": [[2018, 1, 1, 1, 1], [2019, 1, 1, 2, 2], [2020, 2, 1, 2, 2]]}
 
 */
+
+
+WITH CTE AS (
+SELECT YEAR, Wimbledon AS POINT FROM Championships  
+UNION ALL
+SELECT YEAR, Fr_open AS POINT FROM Championships  
+UNION ALL
+SELECT YEAR, US_open AS POINT FROM Championships  
+UNION ALL
+SELECT YEAR, Au_open  AS POINT FROM Championships  )
+
+SELECT B.player_id, B.player_name , COUNT(POINT) AS grand_slams_count  FROM CTE A
+LEFT JOIN Players B
+ON A.POINT=B.player_id
+GROUP BY POINT

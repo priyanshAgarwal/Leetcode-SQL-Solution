@@ -100,6 +100,4 @@ Bob has two contacts, none of them is a trusted contact.
 Alex has one contact and it is a trusted contact (Alice).
 John doesn't have any contacts
 
-
-
 */
