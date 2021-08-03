@@ -59,7 +59,7 @@ SELECT *,
  FROM UserVisits)
 
 -- You don't have to find rank to find the Max, you can simply group by and use the MAX function. 
--- Import you use Rank where multiple row can have same rank.
+-- Import you use Rank where multiple row can have same rank. Remember this
 SELECT user_id, MAX(DATEDIFF(NEXT_DATE,visit_date)) AS biggest_window
 FROM next_day
 GROUP BY user_id;
