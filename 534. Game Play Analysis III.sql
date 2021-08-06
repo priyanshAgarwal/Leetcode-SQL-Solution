@@ -49,6 +49,8 @@ Note that for each player we only care about the days when the player logged in.
 
 */
 
+-- Remember good method for sum
+
 SELECT 
 player_id, 
 event_date, 

@@ -78,7 +78,7 @@ Singing is performed by 2 friends (Victor J. and Jade W.)
 
 */
 
-# Write your MySQL query statement below
+-- LONG MEthod
 
 With activity_count AS (
 SELECT DISTINCT activity, COUNT(*) OVER(PARTITION BY ACTIVITY) AS NUM_PAR FROM FRIENDS),
@@ -97,3 +97,18 @@ LIMIT 1
 SELECT activity AS activity FROM activity_count 
 WHERE NUM_PAR NOT IN (SELECT * FROM activity_max)
 AND NUM_PAR NOT IN (SELECT * FROM  activity_min); 
+
+
+-- SHORT METHOD Good For Finding MIN and MAX
+
+WITH CTE AS (
+SELECT activity,
+        COUNT(ID) AS COUNT_ACTIVITY,
+        MAX(COUNT(ID)) OVER() AS MAX_RANK,
+        MIN(COUNT(ID)) OVER() AS MIN_RANK
+FROM Friends
+GROUP BY activity)
+
+
+SELECT activity FROM CTE
+WHERE COUNT_ACTIVITY NOT IN (MAX_RANK,MIN_RANK)
