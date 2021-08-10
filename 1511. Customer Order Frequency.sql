@@ -102,7 +102,7 @@ Moustafa spent $110 (10 * 2 + 45 * 2) in June and $0 in July 2020.
 */
 
 
-WITH ORDE_TABLE AS(
+WITH ORDE_TABLE AS (
     SELECT 
         A.customer_id,
         C.NAME,

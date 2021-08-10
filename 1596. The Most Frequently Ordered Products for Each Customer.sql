@@ -131,9 +131,20 @@ WHERE PROCUCT_RANK=1 ;
 
 /* Good Point you can count() inside partiotion as well, was looking for this approach,
  also remember to use group by when use count inide OVR() functiom*/
-SELECT B.Name FROM (SELECT CandidateId , DENSE_RANK() OVER(ORDER BY COUNT(CandidateId) DESC) AS vote_rank
-FROM Vote
-GROUP BY CandidateId) A
-INNER JOIN Candidate B
-ON A.CandidateId=B.ID
-WHERE A.vote_rank=1
+WITH CTE AS (
+    SELECT  customer_id,
+            product_id,
+            RANK() OVER (PARTITION BY o.customer_id ORDER BY COUNT(o.product_id) DESC) AS countrank
+    FROM    orders
+    GROUP BY    o.customer_id
+                , o.product_id
+)
+
+    SELECT customer_id,product_id ,
+    DENSE_RANK() OVER(PARTITION BY customer_id ORDER BY COUNT(product_id) DESC) AS ORDER_RANK
+    FROM Orders
+    GROUP BY customer_id,product_id 
+
+
+
+SELECT * FROM CTE
