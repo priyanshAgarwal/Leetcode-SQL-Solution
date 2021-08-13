@@ -67,3 +67,38 @@ UNION ALL
 SELECT '15 or more' AS bin,
        SUM(CASE WHEN mins>=15 THEN 1 ELSE 0 END) AS total
 FROM cte
+
+
+-- METHOD 2
+# Write your MySQL query statement below
+WITH CTE_1 AS(
+SELECT session_id, ROUND(duration*1.0/60,2) AS duration
+FROM Sessions),
+
+CTE_2 AS (
+    SELECT 
+        session_id,
+        CASE 
+            WHEN duration BETWEEN 0 AND 5 THEN '[0-5>'
+            WHEN duration BETWEEN 5 AND 10 THEN '[5-10>'
+            WHEN duration BETWEEN 10 AND 15 THEN '[10-15>'
+            ELSE '15 OR MORE'
+        END AS BIN
+    FROM CTE_1
+),
+
+CTE_3 AS (
+    SELECT '[0-5>' AS BIN 
+     UNION ALL
+    SELECT '[5-10>' AS BIN
+     UNION ALL
+    SELECT '[10-15>' AS BIN
+     UNION ALL
+    SELECT '15 or more' AS BIN
+)
+
+SELECT A.BIN, IFNULL(COUNT(session_id),0) AS TOTAL
+FROM CTE_3 A
+LEFT JOIN CTE_2 B
+ON A.BIN=B.BIN
+GROUP BY A.BIN 
