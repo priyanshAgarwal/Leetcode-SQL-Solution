@@ -64,3 +64,7 @@ WHERE mail REGEXP '^[A-Z][A-Z0-9_.-]*@leetcode.com$'
     $ Denotes last char should be @leetcode.com
     * Denotes Preceding char should be [Alpha or Num or '-', '.', '_']
 */
+
+select *
+from Users
+WHERE mail REGEXP '^[:alpha:][[:alnum:]\_\.\-]*@leetcode.com$'
