@@ -48,3 +48,9 @@ SELECT A.id FROM Weather A
 INNER JOIN Weather B
 ON A.recordDate=date_add(B.recordDate, interval 1 day)
 AND A.Temperature > B.Temperature 
+
+--Method 2 (Consiqutive)
+
+select id from
+(select id, Temperature t1, lag(Temperature,1) over(order by RecordDate) t2, RecordDate d1 , lag(RecordDate,1) over(order by RecordDate) as d2 from Weather) a
+where a.t1 > a.t2 and (d1-d2) =1

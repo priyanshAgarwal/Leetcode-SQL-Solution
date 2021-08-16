@@ -39,7 +39,7 @@ For the above tables, your SQL query should return the following rows (order of 
 
 {"headers": ["NAME", "SALARY", "Name", "SALARY_RANK"], "values":
  [["Max", 90000, "IT", 1], ["Joe", 85000, "IT", 2], ["Randy", 85000, "IT", 2],
-["Will", 70000, "IT", 3], ["Janet", 69000, "IT", 4],
+ ["Will", 70000, "IT", 3], ["Janet", 69000, "IT", 4],
  ["Henry", 80000, "Sales", 1],
  ["Sam", 60000, "Sales", 2]]}
 
