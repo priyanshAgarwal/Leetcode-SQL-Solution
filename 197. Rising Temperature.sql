@@ -52,5 +52,8 @@ AND A.Temperature > B.Temperature
 --Method 2 (Consiqutive)
 
 select id from
-(select id, Temperature t1, lag(Temperature,1) over(order by RecordDate) t2, RecordDate d1 , lag(RecordDate,1) over(order by RecordDate) as d2 from Weather) a
+(select id, Temperature t1, 
+    lag(Temperature,1) over(order by RecordDate) t2, 
+    RecordDate d1 , 
+    lag(RecordDate,1) over(order by RecordDate) as d2 from Weather) a
 where a.t1 > a.t2 and (d1-d2) =1
