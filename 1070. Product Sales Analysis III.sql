@@ -27,7 +27,8 @@ Table: Product
 product_id is the primary key of this table.
  
 
-Write an SQL query that selects the product id, year, quantity, and price for the first year of every product sold.
+Write an SQL query that selects the product id, year, 
+quantity, and price for the first year of every product sold.
 
 The query result format is in the following example:
 
