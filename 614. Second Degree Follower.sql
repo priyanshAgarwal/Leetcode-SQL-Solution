@@ -24,9 +24,8 @@ should output:
 |     D       |  1         |
 +-------------+------------+
 Explaination:
-Both B and D exist in the follower list, when as a followee, B's follower is C and D, and D's follower is E. A does not exist in follower list.
- 
-
+Both B and D exist in the follower list, when as a followee, B's follower is C and D, 
+and D's follower is E. A does not exist in follower list.
  
 
 Note:
@@ -37,7 +36,10 @@ Please display the result in follower's alphabet order.
 
 -- Ask Interviewer if there for distinct cases, Ki if same user is following again or not
 
-SELECT B.followee AS follower, COUNT(DISTINCT B.follower) AS NUM FROM FOLLOW A
+SELECT 
+    B.followee AS follower, 
+    COUNT(DISTINCT B.follower) AS NUM 
+FROM FOLLOW A
 INNER JOIN FOLLOW B
 On A.follower=B.followee 
 GROUP BY B.followee

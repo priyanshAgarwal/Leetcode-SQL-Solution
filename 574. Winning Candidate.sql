@@ -31,7 +31,6 @@ Write a sql to find the name of the winning candidate, the above example will re
 | B    |
 +------+
 
-
 */
 
 Select distinct c.Name As Name
