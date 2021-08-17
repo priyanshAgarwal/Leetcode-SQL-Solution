@@ -73,7 +73,8 @@ Note that the output is only one number and that we do not care about the remove
 
 --Didn't used distinct got wrong answer. Struggled very much with this answer.
 
-WITH CTE AS (SELECT 
+WITH CTE AS (
+SELECT 
     Action_date,
     COUNT(DISTINCT A.post_id) Total_Spam,
     COUNT(DISTINCT B.post_id) Removed_Spam

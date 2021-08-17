@@ -12,15 +12,20 @@ Table: Delivery
 | order_date                  | date    |
 | customer_pref_delivery_date | date    |
 +-----------------------------+---------+
-delivery_id is the primary key of this table.
-The table holds information about food delivery to customers that make orders at some date and specify a preferred delivery date (on the same order date or after it).
+
+Delivery_id is the primary key of this table.
+The table holds information about food delivery to customers that make orders at some date and specify
+a preferred delivery date (on the same order date or after it).
  
 
-If the preferred delivery date of the customer is the same as the order date then the order is called immediate otherwise it's called scheduled.
+If the preferred delivery date of the customer is the same as the order date then the order is 
+called immediate otherwise it's called scheduled.
 
-The first order of a customer is the order with the earliest order date that customer made. It is guaranteed that a customer has exactly one first order.
+The first order of a customer is the order with the earliest order date that customer made.
+It is guaranteed that a customer has exactly one first order.
 
-Write an SQL query to find the percentage of immediate orders in the first orders of all customers, rounded to 2 decimal places.
+Write an SQL query to find the percentage of immediate orders in the first orders of all customers,
+rounded to 2 decimal places.
 
 The query result format is in the following example:
 
@@ -63,6 +68,6 @@ WHERE ORDER_NUMBER=1
 
 
 -- Keep in mind you can use group by using * 
-SELECT *,MIN( order_date) as recent_order
+SELECT *, MIN(order_date) as recent_order
 FROM Delivery
 GROUP BY customer_id

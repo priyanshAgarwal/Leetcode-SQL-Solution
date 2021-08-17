@@ -35,6 +35,7 @@ Views table:
 | 3          | 4         | 4         | 2019-07-21 |
 +------------+-----------+-----------+------------+
 
+
 Result table:
 +------+
 | id   |
@@ -44,8 +45,9 @@ Result table:
 +------+
 */
 
+
 SELECT 
     DISTINCT viewer_id AS ID 
-FROM (SELECT view_date,viewer_id, COUNT(DISTINCT article_id) AS ARTICLE_COUNT FROM Views
+FROM (SELECT view_date,viewer_id, COUNT(DISTINCT article_id) AS ARTICLE_COUNT FROM VIEWS
 GROUP BY viewer_id, view_date) A
 WHERE ARTICLE_COUNT>1
