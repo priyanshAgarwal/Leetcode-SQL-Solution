@@ -71,14 +71,16 @@ FROM   cte;
 
 */
 
-WITH CTE AS (
-    SELECT employee_id from 
-    Employees where manager_id=1 and employee_id!=1
+WITH RECURSIVE CTE AS(
+    SELECT EMPLOYEE_ID, 1 AS LVL 
+    FROM EMPLOYEES 
+    WHERE EMPLOYEE_ID!=1 AND MANAGER_ID=1
     UNION ALL
-    select E.employee_id FROM
-    CTE C INNER JOIN Employees E ON E.manager_id=C.employee_id
+    SELECT B.EMPLOYEE_ID, LVL+1 AS LVL 
+    FROM CTE A 
+    INNER JOIN EMPLOYEES B 
+    ON A.EMPLOYEE_ID=B.MANAGER_ID
 )
 
-SELECT employee_id 
-FROM CTE 
-OPTION (MAXRECURSION 3);
+SELECT employee_id
+FROM CTE
