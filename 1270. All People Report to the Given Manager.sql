@@ -68,6 +68,7 @@ AS     (SELECT 1 AS n -- anchor member
 SELECT n
 FROM   cte;
 
+RECURSION
 
 */
 
