@@ -47,10 +47,13 @@ The maximum customer_id present in the table is 5, so in the range [1,5], IDs 2 
 
 WITH CTE AS (
     SELECT 1 AS VALUE, max(customer_id) as MAX_CUST
-    FROM Customers   -- This is the first and initial condition where we write the base case
+    FROM Customers 
     UNION ALL
-    SELECT VALUE+1 AS VALUE, MAX_CUST -- This is where we iterate the condition
+    SELECT VALUE+1 AS VALUE, MAX_CUST 
     FROM CTE 
-    WHERE VALUE<MAX_CUST -- This to break the condition, So we got the max number and
-    -- we are only running the value till the max customer id
-)
+    WHERE VALUE<MAX_CUST)
+
+SELECT VALUE AS ids
+FROM CTE
+WHERE VALUE NOT IN (SELECT DISTINCT CUSTOMER_ID FROM CUSTOMERS)
+

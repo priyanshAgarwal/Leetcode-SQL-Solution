@@ -115,5 +115,5 @@ SELECT
     FROM SALES_DATA
     PIVOT(
         SUM (quantity)
-        for WEEK_DAY
+        FOR WEEK_DAY
         in (Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday)) as pivot_table

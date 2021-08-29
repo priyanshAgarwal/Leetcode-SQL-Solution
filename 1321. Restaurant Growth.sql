@@ -60,6 +60,9 @@ Result table:
 3rd moving average from 2019-01-03 to 2019-01-09 has an average_amount of (120 + 130 + 110 + 140 + 150 + 80 + 110)/7 = 120
 4th moving average from 2019-01-04 to 2019-01-10 has an average_amount of (130 + 110 + 140 + 150 + 80 + 110 + 130 + 150)/7 = 142.86
 
+***
+sum(amount) over (order by visited_on range between interval 6 day preceding and current row) as amount,
+
 What this line does is it counts subsiquent 7 rows 
 ["VISITED_ON", "CURRENT_AMOUNT", "AMOUNT"], 
 ["2019-01-01", 100, 100],  
@@ -70,11 +73,29 @@ What this line does is it counts subsiquent 7 rows
 ["2019-01-06", 140, 710], 
 ["2019-01-07", 150, 860], (100+110+120+130+110+140+150)
 ["2019-01-08", 80, 840],  (110+120+130+110+140+150+80) leaving '2019-01-01'
-["2019-01-09", 110, 840], 
-["2019-01-10", 130, 1000], 
-["2019-01-10", 150, 1000] will have same amount because amount for same dates are adding up
+["2019-01-09", 110, 840], (120+130+110+140+150+80+110)
+["2019-01-10", 130, 1000], (130+110+140+150+80+110+130+150) Both values for 2019-01-10 are added
+["2019-01-10", 150, 1000]  will have same amount because amount for same dates are adding up
 
-sum(amount) over (order by visited_on range between interval 6 day preceding and current row) as amount,
+This will show same result for both the dates.
+ 
+***
+sum(amount) over (order by visited_on rows between 6 preceding and current row) as amount,
+
+["visited_on", "current_amount", "amount"],
+["2019-01-01", 100, 100], 
+["2019-01-02", 110, 210], 
+["2019-01-03", 120, 330], 
+["2019-01-04", 130, 460], 
+["2019-01-05", 110, 570], 
+["2019-01-06", 140, 710], 
+["2019-01-07", 150, 860], (100+110+120+130+110+140+150)
+["2019-01-08", 80, 840],  (110+120+130+110+140+150+80) leaving '2019-01-01'
+["2019-01-09", 110, 840], (120+130+110+140+150+80+110)
+["2019-01-10", 130, 850], (130+110+140+150+80+110+130) 
+["2019-01-10", 150, 870]  (130+110+140+150+80+110+150) 
+
+For above code we hace two rows for same date
 
 */
 
