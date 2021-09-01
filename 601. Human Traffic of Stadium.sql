@@ -76,7 +76,7 @@ Now if we observe the logic below id - row_num increments for every break of con
 -- METHOD 1
 WITH CTE AS (
     SELECT *, 
-    ID-ROW_NUMBER() OVER(ORDER BY ID) AS GROUP_STADIUM FROM STADIUM
+    ID-DENSE_RANK() OVER(ORDER BY ID) AS GROUP_STADIUM FROM STADIUM
     WHERE PEOPLE>99
 )
 

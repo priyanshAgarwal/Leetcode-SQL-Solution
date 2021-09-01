@@ -38,3 +38,17 @@ WHERE (A.FREE=1 AND A.free_NEXT=1)
 OR (A.FREE=1 AND A.free_PREVIOUS=1)
 ORDER BY seat_id
 
+
+--Method 2
+WITH CTE AS(
+select SEAT_ID, SEAT_ID-DENSE_RANK() OVER(ORDER BY SEAT_ID) AS SEAT_GROUP from cinema c1
+WHERE FREE=1)
+
+
+SELECT SEAT_ID FROM CTE 
+WHERE SEAT_GROUP IN (SELECT 
+                        SEAT_GROUP FROM CTE 
+                        GROUP BY SEAT_GROUP 
+                        HAVING COUNT(DISTINCT SEAT_ID)>1
+                    ) 
+

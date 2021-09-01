@@ -69,3 +69,7 @@ FROM LOGS) AS A
 WHERE A.NUM=A.PREVIOUS_NUM AND A.NUM=A.NEXT_NUM
 
 
+-- Might not be the correct solution, just remeber the approach
+SELECT *,
+    ID-DENSE_RANK() OVER(PARTITION BY NUM ORDER BY ID) AS GROUPING_LOG
+FROM LOGS

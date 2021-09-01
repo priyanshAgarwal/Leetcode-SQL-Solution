@@ -22,8 +22,6 @@ Given the Employee table, write a SQL query that finds out managers with at leas
 +-------+
 
 
-
-
 */
 
 with get_manager AS (
