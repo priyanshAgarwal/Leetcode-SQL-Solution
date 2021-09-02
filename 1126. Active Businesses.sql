@@ -15,16 +15,17 @@ Table: Events
 Each row in the table logs the info that an event of some type occurred at some business for a number of times.
  
 
-The average activity for a particular event_type is the average occurences across all companies that have this event.
+The average activity for a particular event_type is the average occurences across all
+ companies that have this event.
 
-An active business is a business that has more than one event_type such that their occurences is strictly greater than the average activity for that event.
+An active business is a business that has more than one event_type such that their occurences is 
+strictly greater than the average activity for that event.
 
 Write an SQL query to find all active businesses.
 
 The query result format is in the following example:
 
  
-
 Events table:
 +-------------+------------+------------+
 | business_id | event_type | occurences |
@@ -49,6 +50,7 @@ The average activity for each event can be calculated as follows:
 - 'ads': (11+7+6)/3 = 8
 - 'page views': (3+12)/2 = 7.5
 The business with id=1 has 7 'reviews' events (more than 5) and 11 'ads' events (more than 8), so it is an active business.
+
 
 */
 select business_id from 

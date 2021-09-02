@@ -26,7 +26,8 @@ order_id is the primary key of this table.
 book_id is a foreign key to the Books table.
  
 
-Write an SQL query that reports the books that have sold less than 10 copies in the last year, excluding books that have been available for less than 1 month from today. Assume today is 2019-06-23.
+Write an SQL query that reports the books that have sold less than 10 copies in the last year, 
+excluding books that have been available for less than 1 month from today. Assume today is 2019-06-23.
 
 The query result format is in the following example:
 

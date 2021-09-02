@@ -69,3 +69,24 @@ Result table:
 
 
 */
+
+WITH CTE AS (
+SELECT TEAM, SUM(team_points) AS num_points FROM (
+select host_team as team,
+        case when host_goals > guest_goals then 3    
+            when host_goals = guest_goals then 1
+            else 0 end as team_points   
+  from matches
+    UNION ALL
+select guest_team as team,
+        case when host_goals < guest_goals then 3    
+            when host_goals = guest_goals then 1
+            else 0 end as team_points      
+ from Matches ) AS A
+ GROUP BY TEAM)
+ 
+ SELECT A.TEAM_ID, A.TEAM_NAME, IFNULL(num_points,0) AS num_points     
+ FROM Teams A
+ LEFT JOIN CTE B
+ ON A.TEAM_ID=B.TEAM
+ order by 3 desc, 1;
