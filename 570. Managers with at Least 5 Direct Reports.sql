@@ -23,7 +23,15 @@ Given the Employee table, write a SQL query that finds out managers with at leas
 
 
 */
+--SINGLE QUERY 
 
+SELECT Name FROM Employee 
+WHERE Id IN (SELECT DISTINCT ManagerID
+FROM Employee
+GROUP BY ManagerID
+HAVING COUNT(ManagerID)>=5); 
+
+--METHOD 1
 with get_manager AS (
 SELECT ManagerID
 FROM Employee
