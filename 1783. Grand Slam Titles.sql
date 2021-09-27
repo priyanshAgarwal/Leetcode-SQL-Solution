@@ -71,13 +71,13 @@ Player 3 (Novak) did not win anything, we did not include them in the result tab
 
 
 WITH CTE AS (
-SELECT YEAR, Wimbledon AS POINT FROM Championships  
+SELECT  Wimbledon AS POINT FROM Championships  
 UNION ALL
-SELECT YEAR, Fr_open AS POINT FROM Championships  
+SELECT  Fr_open AS POINT FROM Championships  
 UNION ALL
-SELECT YEAR, US_open AS POINT FROM Championships  
+SELECT  US_open AS POINT FROM Championships  
 UNION ALL
-SELECT YEAR, Au_open  AS POINT FROM Championships  )
+SELECT  Au_open  AS POINT FROM Championships )
 
 SELECT B.player_id, B.player_name , COUNT(POINT) AS grand_slams_count  FROM CTE A
 LEFT JOIN Players B

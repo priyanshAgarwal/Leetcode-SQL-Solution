@@ -29,9 +29,9 @@ The shortest distance is 1.00 from point (-1,-1) to (-1,2). So the output should
 -- Remeber when using self join, Important condition to not to join to it self and put 
 -- OR if multiple condition self join
 
-SELECT ROUND(SQRT(POW(A.X-B.X,2)+POW(A.Y-B.Y,2)),2) AS shortest 
-FROM point_2d A
-INNER JOIN point_2d B
+SELECT ROUND(SQRT(POW(A.X-B.X,2)+POW(A.Y-B.Y,2)),2) AS SHORTEST 
+FROM POINT_2D A
+INNER JOIN POINT_2D B
 ON A.X!=B.X OR A.Y!=B.Y
-ORDER BY shortest 
+ORDER BY SHORTEST 
 LIMIT 1
