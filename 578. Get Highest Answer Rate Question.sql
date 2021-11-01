@@ -41,12 +41,15 @@ question 285 has answer rate 1/1, while question 369 has 0/1 answer rate, so out
 
 WITH ANSWER_RATE AS (SELECT *, ROUND((ANSWER/SHOW_ANS)*ANSWER,2) AS ANS_RATE FROM 
           (SELECT 
-            question_id, 
+            QUESTION_ID, 
             SUM(CASE WHEN action='SHOW' THEN 1 ELSE 0 END) AS SHOW_ANS,
             SUM(CASE WHEN action='ANSWER' THEN 1 ELSE 0 END) AS ANSWER
-           FROM survey_log
-           GROUP BY question_id) AS A)
+           FROM SURVEY_LOG
+           GROUP BY QUESTION_ID) AS A)
            
            
-SELECT question_id AS survey_log FROM (SELECT *, DENSE_RANK() OVER(ORDER BY ANS_RATE DESC) AS RATE_RANK FROM ANSWER_RATE) AS A
+SELECT QUESTION_ID AS SURVEY_LOG FROM (
+  SELECT *, DENSE_RANK() OVER(ORDER BY ANS_RATE DESC) AS RATE_RANK
+  FROM ANSWER_RATE
+) AS A
 WHERE A.RATE_RANK=1;

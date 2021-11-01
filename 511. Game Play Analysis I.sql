@@ -45,8 +45,8 @@ Result table:
 
 SELECT player_id, event_date AS first_login
 FROM (SELECT 
-player_id, 
-event_date, 
+PLAYER_ID, 
+EVENT_DATE, 
 DENSE_RANK() OVER(PARTITION BY PLAYER_ID ORDER BY EVENT_DATE) AS FIRST_LOGIN 
 FROM Activity) A
 WHERE A.FIRST_LOGIN=1

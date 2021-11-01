@@ -19,7 +19,38 @@ follow their instincts and best practices.
 
 */
 
+--Method 1
 select words, count(words) from (
 select unnest(string_to_array(contents,' ')) as words from google_file_store) A
 where words in ('bull','bear')
 group by words
+
+--Method 2
+select 'Bear' as contents,count(*)
+from google_file_store
+where contents like '%bear%'
+union all
+select 'Bull' as contents,count(*)
+from google_file_store
+where contents like '%bull%'
+
+--Method 3
+select 'Bear' as contents,
+sum(case when contents like '%bear%' then 1 else 0 end)
+from google_file_store
+union all
+select 'Bull' as contents,
+sum(case when contents like '%bull%' then 1 else 0 end)
+from google_file_store
+
+-- Method 4 
+select  
+    'bull'
+    ,COUNT(regexp_match(contents, 'bull'))
+from google_file_store
+UNION ALL
+select  
+    'bear'
+    ,COUNT(regexp_match(contents, 'bear'))
+from google_file_store
+
