@@ -10,6 +10,7 @@ Share
 SQL Schema
 Table: Members
 
+
 +-------------+---------+
 | Column Name | Type    |
 +-------------+---------+
