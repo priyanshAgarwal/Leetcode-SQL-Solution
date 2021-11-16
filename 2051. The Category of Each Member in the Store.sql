@@ -18,7 +18,6 @@ Table: Members
 +-------------+---------+
 member_id is the primary key column for this table.
 Each row of this table indicates the name and the ID of a member.
- 
 
 Table: Visits
 
@@ -33,7 +32,6 @@ visit_id is the primary key column for this table.
 member_id is a foreign key to member_id from the Members table.
 Each row of this table contains information about the date of a visit to the store and the member who visited it.
  
-
 Table: Purchases
 
 +----------------+------+
@@ -45,7 +43,6 @@ Table: Purchases
 visit_id is the primary key column for this table.
 visit_id is a foreign key to visit_id from the Visits table.
 Each row of this table contains information about the amount charged in a visit to the store.
- 
 
 A store wants to categorize its members. There are three tiers:
 
@@ -60,8 +57,6 @@ Write an SQL query to report the id, the name, and the category of each member.
 Return the result table in any order.
 
 The query result format is in the following example.
-
- 
 
 Example 1:
 
