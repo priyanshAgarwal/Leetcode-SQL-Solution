@@ -113,7 +113,7 @@ WHERE ranks = 2
 
 SELECT user_id AS seller_id, 
 CASE
-    WHEN item_brand=favorite_brand THEN 'yes' ELSE 'no' END AS 2nd_item_fav_brand 
+    WHEN item_brand=favorite_brand THEN 'YES' ELSE 'NO' END AS 2nd_item_fav_brand 
 FROM tmp2 A
 RIGHT JOIN Users B
 ON A.seller_id=B.user_ID
