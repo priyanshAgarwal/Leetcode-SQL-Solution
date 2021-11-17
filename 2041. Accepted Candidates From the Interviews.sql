@@ -3,12 +3,6 @@
 2041. Accepted Candidates From the Interviews
 Medium
 
-8
-
-8
-
-Add to List
-
 Share
 SQL Schema
 Table: Candidates
@@ -87,5 +81,11 @@ Explanation:
 - Candidate 6: The total score is 10, and they have ten years of experience. We do not include them in the result table because the score is not good enough.
 - Candidate 8: The total score is 6, and they have zero years of experience. We do not include them in the result table because of their years of experience and the score.
 
-
 */
+
+SELECT A.CANDIDATE_ID FROM CANDIDATES A
+INNER JOIN ROUNDS B
+ON A.INTERVIEW_ID=B.INTERVIEW_ID
+WHERE A.YEARS_OF_EXP>1
+GROUP BY A.CANDIDATE_ID,B.INTERVIEW_ID
+HAVING SUM(SCORE)>15
