@@ -50,7 +50,7 @@ For the above tables, your SQL query should return the following rows (order of 
 */
 
 
-
+-- Method 1
 SELECT 
     DEPT_NAME AS DEPARTMENT,
     NAME AS EMPLOYEE,
@@ -66,3 +66,18 @@ FROM
         ON A.DepartmentId=B.ID
     ) AS E_RANK
 WHERE E_RANK.SALARY_RANK<4; 
+
+-- Method 2
+WITH CTE AS(
+SELECT 
+    A.name AS EMPLOYEE,
+    salary,
+    B.NAME AS DEPARTMENT,
+    DENSE_RANK() OVER(PARTITION BY DEPARTMENTID ORDER BY SALARY DESC) AS SALRY_RANK 
+FROM EMPLOYEE A
+INNER JOIN DEPARTMENT B
+ON A.DEPARTMENTID=B.ID)
+
+
+SELECT Department,Employee,Salary FROM CTE 
+WHERE SALRY_RANK<=3
