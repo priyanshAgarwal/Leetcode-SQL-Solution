@@ -52,8 +52,12 @@ The four rows with ids 5, 6, 7, and 8 have consecutive ids and each of them has 
 The rows with ids 2 and 3 are not included because we need at least three consecutive ids.
 
 Explanation -
-If we use a row_number window ordered by id where people >= 100 assuming id's are gonna be unique we will get a unique incremental row_num (think of it as id for a new table which consist only of ids with people over 100).
-Now if we observe the logic below id - row_num increments for every break of consecutive chain of 100+ days. count of the id - row_num will result more than 3 incase where our window size is >=3
+If we use a row_number window ordered by id where people >= 100 assuming id's are gonna be
+unique we will get a unique incremental row_num (think of it as id for a new table which
+consist only of ids with people over 100).
+Now if we observe the logic below id - row_num increments for every break of consecutive
+chain of 100+ days. count of the id - row_num will result more than 3 incase where our 
+window size is >=3
 
 # +------+------------+-----------+------------+------------+
 # | id   | visit_date | people    | row_num    |id - row_num|
@@ -85,7 +89,8 @@ GROUP BY GROUP_STADIUM
 HAVING COUNT(GROUP_STADIUM)>2);
 
 
--- METHOD 2
+-- METHOD 2 (Reason we are using 2 for lag and lead because we want more than 2 rows where
+-- number of people are more than 100)
 WITH CTE AS (
 SELECT *,
     LAG(PEOPLE,1) OVER(ORDER BY ID) AS PREVIOUS_PEOPLE,
