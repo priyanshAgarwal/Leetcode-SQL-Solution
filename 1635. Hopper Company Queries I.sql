@@ -144,5 +144,40 @@ By the end of October --> six active drivers (10, 8, 5, 7, 4, 1) and no accepted
 By the end of November --> six active drivers (10, 8, 5, 7, 4, 1) and two accepted rides (20, 5).
 By the end of December --> six active drivers (10, 8, 5, 7, 4, 1) and one accepted ride (2).
 
+select count(driver_id) from Drivers where year(join_date) < 2020
+Result - 1
 
 */
+
+WITH RECURSIVE ALL_MONTHS AS (
+    SELECT 1 AS LIST_MONTH 
+    UNION ALL
+    SELECT LIST_MONTH+1  FROM ALL_MONTHS
+    WHERE LIST_MONTH<12
+),
+
+
+ACTIVE_DRIVERS AS (
+SELECT LIST_MONTH, COUNT(DRIVER_ID) OVER(ORDER BY LIST_MONTH) + (SELECT COUNT(DRIVER_ID) FROM DRIVERS WHERE YEAR(JOIN_DATE) < 2020) AS ACTIVE_DRIVERS 
+FROM ALL_MONTHS A 
+LEFT JOIN DRIVERS B
+ON LIST_MONTH=MONTH(JOIN_DATE)
+AND YEAR(JOIN_DATE)='2020'),
+
+accept_rides as (
+select MONTH(requested_at) AS MONTH, COUNT(B.ride_id) AS accepted_rides  from acceptedRides a
+left join rides b
+on a.ride_id=b.ride_id
+where YEAR(requested_at)='2020'
+group by month(requested_at)
+)
+
+
+SELECT 
+DISTINCT 
+LIST_MONTH AS MONTH,
+ACTIVE_DRIVERS,
+IFNULL(accepted_rides ,0) AS accepted_rides 
+FROM ACTIVE_DRIVERS A
+LEFT JOIN accept_rides B
+ON A.LIST_MONTH=B.MONTH
