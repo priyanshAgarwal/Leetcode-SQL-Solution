@@ -63,5 +63,32 @@ Explanation:
 On 2019-07-01, user 1 purchased using both desktop and mobile, user 2 purchased using mobile only and user 3 purchased using desktop only.
 On 2019-07-02, user 2 purchased using mobile only, user 3 purchased using desktop only and no one purchased using both platforms.
 
-
 */
+
+WITH ALL_VALUES AS ( 
+SELECT SPEND_DATE, 'mobile' AS PLATFORM FROM SPENDING GROUP BY SPEND_DATE
+UNION
+SELECT SPEND_DATE, 'desktop' AS PLATFORM FROM SPENDING GROUP BY SPEND_DATE
+UNION 
+SELECT SPEND_DATE, 'both' AS PLATFORM FROM SPENDING GROUP BY SPEND_DATE
+),
+
+COUNT_SPENDING AS(
+    SELECT
+        USER_ID,
+        SPEND_DATE,
+        SUM(AMOUNT) AS AMOUNT,
+        CASE WHEN COUNT(DISTINCT PLATFORM)=2 THEN 'both' ELSE PLATFORM END AS PLATFORM 
+    FROM SPENDING
+    GROUP BY 1,2  
+)
+
+SELECT 
+    A.SPEND_DATE as spend_date,
+    A.PLATFORM as platform,
+    IFNULL(SUM(AMOUNT),0) AS total_amount,
+    COUNT(USER_ID) AS total_users
+FROM ALL_VALUES A 
+LEFT JOIN COUNT_SPENDING B
+ON A.SPEND_DATE=B.SPEND_DATE AND A.PLATFORM=B.PLATFORM
+GROUP BY 1,2
