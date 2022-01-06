@@ -76,6 +76,23 @@ From 2019-01-06 to 2019-01-06 all tasks succeeded and system state was "succeede
 
 */
 
+
+-- My Code (Easy to Understand)
+
+WITH CTE AS (
+SELECT *, DENSE_RANK() OVER(ORDER BY DATE)- DENSE_RANK() OVER(PARTITION BY STATE ORDER BY DATE) AS STATE_GROUP
+FROM (
+SELECT FAIL_DATE AS DATE, 'failed' AS STATE FROM FAILED
+UNION ALL
+SELECT SUCCESS_DATE AS DATE, 'succeeded' AS STATE FROM SUCCEEDED) A
+WHERE DATE BETWEEN '2019-01-01' AND '2019-12-31'
+ORDER BY STATE_GROUP)
+
+SELECT STATE AS PERIOD_STATE, MIN(DATE) AS START_DATE, MAX(DATE) AS END_DATE
+FROM CTE
+GROUP BY STATE, STATE_GROUP
+ORDER BY START_DATE
+
 --Shorter Answer
 WITH CTE AS (
 SELECT *, DENSE_RANK() OVER(PARTITION BY STATE ORDER BY DATE) AS SEQ FROM(
@@ -94,7 +111,8 @@ ORDER BY 2
 with a as (
 (select fail_date as date,
 'failed' as period_state
-from failed)
+from failed
+)
 union all
 (select success_date as date,
 'succeeded' as period_state
