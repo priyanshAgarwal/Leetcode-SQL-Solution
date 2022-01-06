@@ -150,8 +150,7 @@ By the end of December --> six active drivers (10, 8, 5, 7, 4, 1) and one accept
 
 # Write your MySQL query statement below
 
-WITH RECURSIVE ALL_MONTHS AS 
-(
+WITH RECURSIVE ALL_MONTHS AS (
     SELECT 1 AS JOIN_MONTH
     UNION ALL
     SELECT JOIN_MONTH+1 AS JOIN_MONTH FROM ALL_MONTHS
