@@ -99,8 +99,8 @@ So the cumulative salary summary for this employee is:
 
 */
 
-with recursive cte(month) as (
-select 1
+with recursive cte() as (
+select 1 AS month
     union all
 select month + 1 from cte where month < 12
 ),
@@ -122,3 +122,42 @@ right join cte1 on e.month = cte1.month and e.id = cte1.id
 order by cte1.id, cte1.month desc) a
 where mon is not null
 and mon != max_month
+
+
+-- Long Method but Explainable 
+WITH RECURSIVE CTE AS (
+    SELECT 
+        ID,
+        MIN(MONTH) AS MIN_MONTH,
+        MAX(MONTH) AS MAX_MONTH
+    FROM EMPLOYEE GROUP BY ID
+    UNION ALL
+    SELECT ID, MIN_MONTH+1 AS MIN_MONTH, MAX_MONTH
+    FROM CTE WHERE MIN_MONTH<MAX_MONTH
+),
+
+CTE_2 AS ( 
+SELECT 
+        A.ID,
+        A.MIN_MONTH AS MONTH,
+        IFNULL(B.SALARY,0) AS SALARY
+FROM CTE A
+LEFT JOIN EMPLOYEE B
+ON A.ID=B.ID AND A.MIN_MONTH=B.MONTH),
+
+
+CUM_SALARY AS (
+SELECT 
+    ID,
+    MONTH,
+    SUM(SALARY) OVER(PARTITION BY ID ORDER BY MONTH ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS SALARY
+FROM CTE_2
+ORDER BY 1),
+
+FINAL_RESULT AS (
+SELECT ID, MONTH, SALARY FROM (
+SELECT *, DENSE_RANK() OVER(PARTITION BY ID ORDER BY MONTH DESC) AS MOST_RECENT FROM CUM_SALARY) A WHERE A.MOST_RECENT!=1)
+
+SELECT A.ID, A.MONTH, B.SALARY FROM EMPLOYEE A
+INNER JOIN FINAL_RESULT B ON A.ID=B.ID AND A.MONTH=B.MONTH 
+ORDER BY ID, MONTH DESC

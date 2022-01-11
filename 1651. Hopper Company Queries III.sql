@@ -143,3 +143,65 @@ By the end of October --> average_ride_distance = (0+163+6)/3=56.33, average_rid
 
 
 */
+
+WITH RECURSIVE total_date AS 
+(
+    SELECT 
+        CAST('2020-01-01' AS DATE) AS day
+    UNION
+    SELECT 
+        DATE_ADD(day, INTERVAL 1 MONTH) 
+    FROM 
+        total_date 
+    WHERE 
+        day < '2020-12-01'
+),
+    temp1 AS
+(
+    SELECT
+        MONTH(requested_at) AS month,
+        ride_distance,
+        ride_duration
+    FROM 
+        Rides r
+    INNER JOIN
+        AcceptedRides ar
+    USING
+        (ride_id)
+    WHERE
+        requested_at LIKE "2020%"
+),
+    temp2 AS
+(
+    SELECT 
+        MONTH(day) AS month,
+        COALESCE(SUM(ride_distance),0) AS ride_distance,
+        COALESCE(SUM(ride_duration),0) AS ride_duration
+    FROM
+        total_date tt
+    LEFT JOIN
+        temp1 t1
+    ON
+        MONTH(day) = t1.month
+    GROUP BY
+        MONTH(day)
+),
+    temp3 AS
+(
+    SELECT
+        month,
+        ROUND(AVG(ride_distance) OVER (ORDER BY month ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING),2) AS average_ride_distance,
+        ROUND(AVG(ride_duration) OVER (ORDER BY month ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING),2) AS average_ride_duration
+    FROM
+        temp2
+)
+SELECT 
+    month, 
+    average_ride_distance, 
+    average_ride_duration  
+FROM 
+    temp3
+WHERE
+    month != 11
+    AND
+    month != 12
