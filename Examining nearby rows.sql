@@ -20,3 +20,5 @@ select
      avg(weight) over (order by weight ROWS between 1 preceding and 1 following) as average_weight
 from cats order by weight
 
+select name, weight, cast(cume_dist() over (order by weight) * 100 as integer) as percent from cats order by weight
+
