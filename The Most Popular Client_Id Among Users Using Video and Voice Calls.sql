@@ -10,10 +10,10 @@ from fact_events
 GROUP BY 1),
 
 cte_2 as(
-select b.client_id,dense_rank() over(order by count(*) desc) as client_rank from cte a
+select b.client_id,dense_rank() over(order by count(*) desc) as client_rank from cte A
 inner join fact_events b
-on a.user_id=b.user_id
-where a.EVENT_PERCENTAGE>=0.50
+on A.user_id=b.user_id
+where A.EVENT_PERCENTAGE>=0.50
 group by 1)
 
 select client_id from cte_2
