@@ -16,3 +16,11 @@ group by user_id
 )
 
 select user_id from cte where Refinance>=1 and InSchool>=1
+
+
+-- method 2  (Intersection)
+select distinct user_id from loans
+where type='Refinance'
+intersect
+select distinct user_id from loans
+where type='InSchool'
