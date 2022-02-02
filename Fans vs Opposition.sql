@@ -9,7 +9,7 @@ Duplicates in pairings can be left in the solution. For example, (2, 3) and (3, 
 */
 
 
--- Remember using employee_id as well
+-- Remember using employee_id as well so that we can order by employee_id
 
 WITH CTE AS (SELECT *,
 DENSE_RANK() OVER(ORDER BY POPULARITY DESC,employee_id) AS MORE_POPULAR,
