@@ -65,6 +65,13 @@ Result table:
 +-----------+--------------------+
 
 
+["NAME", "AVAILABLE_FROM", "QUANTITY", "DISPATCH_DATE"],
+["Kalila And Demna", "2010-01-01", 1, "2018-11-05"], 
+["Kalila And Demna", "2010-01-01", 2, "2018-07-26"], 
+["The Hobbit", "2019-06-10", 8, "2019-06-11"], 
+["13 Reasons Why", "2019-06-01", 5, "2019-06-20"], 
+["13 Reasons Why", "2019-06-01", 6, "2019-06-05"]]}
+
 
 */
 
@@ -78,3 +85,17 @@ on b.book_id = t.book_id
 where available_from < '2019-05-23'
 and (book_sold is null or book_sold <10)
 order by b.book_id;
+
+-- # Write your MySQL query statement below
+
+SELECT BOOK_ID,NAME FROM (SELECT 
+    A.BOOK_ID,
+    A.NAME,
+    COALESCE(SUM(B.QUANTITY),0) AS QUANTITY_SOLD
+FROM BOOKS A 
+LEFT JOIN ORDERS B
+ON A.BOOK_ID=B.BOOK_ID
+AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-23'
+WHERE AVAILABLE_FROM < DATE_ADD('2019-06-23', INTERVAL -30 DAY)
+GROUP BY 1,2) AS A
+WHERE A.QUANTITY_SOLD<10

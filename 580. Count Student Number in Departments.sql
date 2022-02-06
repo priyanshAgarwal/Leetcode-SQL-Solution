@@ -59,3 +59,10 @@ SELECT dept_id, COUNT(student_name) AS student_number  FROM student
 GROUP BY dept_id) B
 ON D.dept_id=B.dept_id
 ORDER BY student_number DESC, D.dept_name ASC
+
+-- METHOD 2
+SELECT A.DEPT_NAME, IFNULL(COUNT(STUDENT_ID),0) AS STUDENT_NUMBER FROM DEPARTMENT A
+LEFT JOIN STUDENT B
+ON A.DEPT_ID=B.DEPT_ID
+GROUP BY 1
+ORDER BY 2 DESC, 1
