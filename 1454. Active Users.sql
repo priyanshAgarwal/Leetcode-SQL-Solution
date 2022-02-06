@@ -69,7 +69,8 @@ User Jonathan with id = 7 logged in 7 times in 6 different days, five of them we
 Follow up question:
 Can you write a general solution if the active users are those who logged in to their accounts for n or more consecutive days?
 
-{"headers": ["id", "login_date", "LOGIN_RANK", "DATE_GROUPING"], "values": [
+{"headers": ["id", "login_date", "LOGIN_RANK", "DATE_GROUPING"],
+ "values": [
     [27, "2020-06-26", 1, "2020-06-25"], 
     [27, "2020-06-27", 2, "2020-06-25"], 
     [27, "2020-06-28", 3, "2020-06-25"], 
