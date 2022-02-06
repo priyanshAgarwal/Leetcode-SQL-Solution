@@ -3,12 +3,6 @@
 1841. League Statistics
 Medium
 
-41
-
-24
-
-Add to List
-
 Share
 SQL Schema
 Table: Teams
@@ -22,7 +16,6 @@ Table: Teams
 team_id is the primary key for this table.
 Each row contains information about one team in the league.
  
-
 Table: Matches
 
 +-----------------+---------+
