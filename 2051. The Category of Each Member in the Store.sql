@@ -108,6 +108,15 @@ Explanation:
 - User Alice with id = 9 visited the store two times and purchased one time. The conversion rate = (100 * 1) / 2 = 50. She gets a Gold category.
 - User Bob with id = 11 visited the store three times and purchased one time. The conversion rate = (100 * 1) / 3 = 33.33. He gets a Silver category.
 
+
+{"headers": ["visit_id", "member_id", "visit_date", "visit_id", "charged_amount"], 
+[22, 11, "2021-10-28", null, null],
+[16, 11, "2021-01-12", null, null], 
+[18, 9, "2021-12-10", 18, 9000], 
+[19, 3, "2021-10-19", null, null], 
+[12, 11, "2021-03-01", 12, 2000], 
+[17, 8, "2021-05-07", 17, 7000], 
+[21, 9, "2021-05-12", null, null]]}
 */
 
 -- METHOD 1
