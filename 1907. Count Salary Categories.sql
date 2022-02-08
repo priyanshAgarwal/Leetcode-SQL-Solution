@@ -49,6 +49,15 @@ Average Salary: No accounts.
 High Salary: Accounts 3, 6, and 8.
 
 
+
+
+["Low_Salary", "medium_Salary", "high_Salary"], 
+[1, 0, 0], 
+[1, 0, 1], 
+[1, 0, 2], 
+[1, 0, 3]
+
+
 */
 
 -- Very Important but wierd concept
