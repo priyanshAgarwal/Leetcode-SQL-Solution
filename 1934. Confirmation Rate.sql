@@ -77,6 +77,12 @@ User 3 made 2 requests and both timed out. The confirmation rate is 0.
 User 7 made 3 requests and all were confirmed. The confirmation rate is 1.
 User 2 made 2 requests where one was confirmed and the other timed out. The confirmation rate is 1 / 2 = 0.5.
 
+
+["user_id", "time_stamp", "action", "user_id", "time_stamp"]
+[7, "2021-06-14 13:59:27", "confirmed", 7, "2020-01-04 13:57:59"],
+[7, "2021-06-13 12:58:28", "confirmed", 7, "2020-01-04 13:57:59"],
+[7, "2021-06-12 11:57:29", "confirmed", 7, "2020-01-04 13:57:59"], 
+[2, "2021-01-22 00:00:00", "confirmed", 2, "2020-07-29 23:09:44"]]}
 */
 
 --My Logic Long One
@@ -92,12 +98,11 @@ REQUEST_COUNT AS (SELECT
     SUM(CASE WHEN action='confirmed ' THEN 1 ELSE 0 END) AS confirmed   
     FROM ALL_USERS 
     GROUP BY USER_ID)
-    
-    
-    SELECT 
-        USER_ID,
-        ROUND(confirmed/REQUEST,2) AS confirmation_rate
-    FROM REQUEST_COUNT;
+        
+SELECT 
+    USER_ID,
+    ROUND(confirmed/REQUEST,2) AS confirmation_rate
+FROM REQUEST_COUNT;
 
 -- Short Logic
 SELECT 
