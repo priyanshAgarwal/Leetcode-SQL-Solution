@@ -67,20 +67,23 @@ For example, Salary for Morninngcat (3, 15) after taxes = 7777 - 7777 * (24 / 10
 */
 
 
-WITH tax_multiplier AS (
-SELECT company_id,
-CASE WHEN MAX(salary) < 1000 THEN 0
-WHEN MAX(salary) <= 10000 THEN 0.24
-ELSE 0.49 END AS TAX_RATE
-FROM Salaries
-GROUP BY company_id
-)    
-  
+WITH CTE AS (SELECT 
+    COMPANY_ID,
+    CASE
+        WHEN MAX(SALARY) < 1000 THEN 1.0
+        WHEN MAX(SALARY) BETWEEN 1000 AND 10000 THEN 0.76
+        WHEN MAX(SALARY) > 10000 THEN 0.51
+    END AS TAX_RATE
+FROM SALARIES
+GROUP BY 1)
+             
 SELECT 
-    A.company_id, A.employee_id, A.employee_name, 
-    ROUND((SALARY*(1-TAX_RATE)),0) AS SALARY FROM Salaries A 
-INNER JOIN tax_multiplier B
-ON A.company_id =B.company_id 
+    A.COMPANY_ID,
+    EMPLOYEE_ID,
+    employee_name,
+    ROUND(SALARY*TAX_RATE) AS SALARY
+FROM SALARIES A
+INNER JOIN CTE B ON A.COMPANY_ID=B.COMPANY_ID 
 
 
 -- REMENBER WHEN USING ROUND WITH CASE 
