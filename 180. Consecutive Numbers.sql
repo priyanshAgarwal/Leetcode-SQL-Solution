@@ -60,6 +60,16 @@ SELECT
 FROM
 	basic_pays;
 
+
+["id", "num", "DENSE_RANK() OVER(PARTITION BY NUM ORDER BY ID)"]
+[1, 1, 1],  so hoga kya ki  id-dense_rank same group me aa jayega.
+[2, 1, 2], 
+[3, 1, 3], 
+[5, 1, 4], 
+[4, 2, 1], 
+[6, 2, 2], 
+[7, 2, 3]	
+
 */
 
 SELECT DISTINCT NUM AS ConsecutiveNums FROM (SELECT ID, NUM, 
@@ -69,7 +79,8 @@ FROM LOGS) AS A
 WHERE A.NUM=A.PREVIOUS_NUM AND A.NUM=A.NEXT_NUM
 
 -- Gap and Island
-SELECT NUM AS ConsecutiveNums  FROM (SELECT 
+SELECT NUM AS ConsecutiveNums  
+FROM (SELECT 
     *, 
     ID-DENSE_RANK() OVER(PARTITION BY NUM ORDER BY ID) AS GROUP_INGS
 FROM LOGS) AS A
