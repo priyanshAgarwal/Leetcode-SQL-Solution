@@ -21,8 +21,25 @@ Given the Employee table, write a SQL query that finds out managers with at leas
 | John  |
 +-------+
 
+["id", "name", "department", "managerId", "id", "name", "department", "managerId"], 
+[101, "John", "A", null, 102, "Dan", "A", 101],
+[101, "John", "A", null, 103, "James", "A", 101], 
+[101, "John", "A", null, 104, "Amy", "A", 101], 
+[101, "John", "A", null, 105, "Anne", "A", 101], 
+[101, "John", "A", null, 106, "Ron", "B", 101]]}
+
+SELECT * FROM
+EMPLOYEE A INNER JOIN EMPLOYEE B
+ON A.ID=B.MANAGERID
 
 */
+--SELF JOIN 
+SELECT A.NAME FROM
+EMPLOYEE A INNER JOIN EMPLOYEE B
+ON A.ID=B.MANAGERID
+GROUP BY B.MANAGERID
+HAVING COUNT(B.ID)>4
+
 --SINGLE QUERY 
 
 SELECT Name FROM Employee 
