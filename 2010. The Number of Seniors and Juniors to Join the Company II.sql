@@ -3,10 +3,6 @@
 2010. The Number of Seniors and Juniors to Join the Company II
 Hard
 
-2
-
-2
-
 Add to List
 
 Share
