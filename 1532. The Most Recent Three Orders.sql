@@ -83,28 +83,28 @@ We sort the result table by customer_name in ascending order, by customer_id in 
 
 */
 
-with order_rank as(
-    SELECT *,
-    DENSE_RANK() OVER(PARTITION BY customer_id ORDER BY order_date DESC) as order_rank FROM Orders
-),
-
-get_customer_name as (
-SELECT 
-    C.NAME AS customer_name,
-    O.customer_id,
-    O.order_id,
-    O.order_date,
-    O.order_rank
-    FROM Customers C
-    INNER JOIN order_rank O
-    ON C.customer_id=O.customer_id 
-)
-
-SELECT 
-    customer_name,
-    customer_id,
-    order_id,
-    order_date 
-FROM get_customer_name
-WHERE order_rank<=3
-ORDER BY customer_name,customer_id,order_date DESC;
+# Write your MySQL query statement below
+WITH CTE AS (SELECT 
+    B.NAME,
+    A.CUSTOMER_ID,
+    A.ORDER_ID,
+    A.ORDER_DATE,         
+    ORDER_RANK
+FROM (SELECT 
+    CUSTOMER_ID,
+    ORDER_ID, 
+    ORDER_DATE,  
+    DENSE_RANK() OVER(PARTITION BY CUSTOMER_ID ORDER BY ORDER_DATE DESC) AS ORDER_RANK
+    FROM ORDERS) AS A
+    INNER JOIN CUSTOMERS B
+    ON A.CUSTOMER_ID=B.CUSTOMER_ID)
+    
+    
+SELECT
+    NAME AS customer_name ,
+    CUSTOMER_ID AS customer_id ,
+    ORDER_ID AS order_id ,
+    ORDER_DATE AS order_date 
+FROM CTE 
+WHERE ORDER_RANK<=3
+ORDER BY 1,2,4 DESC;
