@@ -66,6 +66,29 @@ Explanation:
 Users 1 and 2 have 4 common friends (3, 4, 5, and 6).
 Users 1 and 3 have 3 common friends (2, 6, and 7).
 We did not include the friendship of users 2 and 3 because they only have two common friends (1 and 6).
-
-
 */
+
+# Write your MySQL query statement below
+
+with friends as (
+    select user1_id,
+           user2_id
+    from friendship
+    union
+    select user2_id,
+           user1_id
+    from friendship
+)
+
+SELECT 
+    A.USER1_ID AS user1_id,
+    B.USER1_ID AS user2_id,
+    COUNT(*) AS common_friend 
+FROM 
+    friends A
+INNER JOIN 
+    friends B
+ON A.USER2_ID=B.USER2_ID AND A.USER1_ID<B.USER1_ID AND A.USER1_ID<>B.USER1_ID
+WHERE (A.user1_id,B.user1_id) IN (SELECT user1_id,user2_id FROM friendship)
+GROUP BY 1,2
+HAVING COUNT(*)>2
