@@ -33,6 +33,10 @@ GROUP BY 1;
     
 
 -- Method 2
+
+-- If you don't use MONTH(TIME_ID) and use TIME_ID then your answer will be wrong, because dense_rank will also
+-- calculate login where user loged in same moth but after first login then those logins will be counted towrds old login 
+
 WITH CTE AS (
     SELECT 
         USER_ID,
