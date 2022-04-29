@@ -62,8 +62,8 @@ High Salary: Accounts 3, 6, and 8.
 
 -- Very Important but wierd concept
 
-SELECT 'Low Salary' AS Category, SUM(income <20000) AS accounts_count FROM Accounts
-UNION ALL 
-SELECT 'Average Salary' AS Category, SUM(income BETWEEN 20000 AND 50000) AS accounts_count FROM Accounts
+SELECT 'Low Salary' AS Category, COUNT( CASE WHEN income <20000 THEN ACCOUNT_ID ELSE NULL END) AS accounts_count FROM Accounts
 UNION ALL
-SELECT 'High Salary' AS Category, SUM(income>50000) AS accounts_count FROM Accounts;
+SELECT 'Average Salary' AS Category, COUNT(CASE WHEN income BETWEEN 20000 AND 50000 THEN ACCOUNT_ID ELSE NULL END) AS accounts_count FROM Accounts
+UNION ALL
+SELECT 'High Salary' AS Category, COUNT(CASE WHEN INCOME>50000 THEN ACCOUNT_ID ELSE NULL END) AS accounts_count FROM Accounts;
