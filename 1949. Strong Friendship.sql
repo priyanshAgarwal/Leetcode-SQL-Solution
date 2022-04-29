@@ -68,8 +68,6 @@ Users 1 and 3 have 3 common friends (2, 6, and 7).
 We did not include the friendship of users 2 and 3 because they only have two common friends (1 and 6).
 */
 
-# Write your MySQL query statement below
-
 with friends as (
     select user1_id,
            user2_id
