@@ -106,7 +106,7 @@ FROM REQUEST_COUNT;
 
 -- Short Logic
 SELECT 
-A.user_id,
+A.USER_ID,
 ROUND(SUM(CASE WHEN action='confirmed' THEN 1 ELSE 0 END)/COUNT(*),2) AS confirmation_rate 
 FROM Signups A
 LEFT JOIN Confirmations B
