@@ -54,6 +54,11 @@ Output:
 +---------+------+--------+
  
 
+["CONTINENT", "America", "Europe", "Asia"], 
+[["America", "Jane", null, null], 
+["Europe", null, "Pascal", null], 
+["Asia", null, null, "Xi"]]}
+
 Follow up: If it is unknown which continent has the most students, could you write a query to generate the student report?
 
 */
