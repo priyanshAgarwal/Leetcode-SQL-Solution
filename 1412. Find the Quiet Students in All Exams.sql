@@ -111,6 +111,12 @@ FROM EXAM),
 -- [40, 2, 70, 80, 60],
 -- [40, 4, 80, 80, 60]
 
+/*
+["exam_id", "student_id", "score", "MAX_SCORE", "MIN_SCORE"], 
+[10, 2, 80, 90, 70], 
+[30, 3, 80, 90, 70], 
+[40, 2, 70, 80, 60]]}
+*/
 
 GET_STUDENT AS (
 SELECT 

@@ -73,6 +73,13 @@ From 2019-01-06 to 2019-01-06 all tasks succeeded and system state was "succeede
 
 -- Consecutive Dates
 
+["DATE", "STATE", "G2"],
+["2019-01-01", "succeeded", 0], 
+["2019-01-02", "succeeded", 0], 
+["2019-01-03", "succeeded", 0], 
+["2019-01-04", "failed", 3], 
+["2019-01-05", "failed", 3], 
+["2019-01-06", "succeeded", 2]]}
 
 */
 
