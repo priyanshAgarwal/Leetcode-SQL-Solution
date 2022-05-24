@@ -33,4 +33,4 @@ For example, given the above Scores table, your query should generate the follow
 */
 
 
-SELECT SCORE, DENSE_RANK() OVER(ORDER BY SCORE DESC) AS RANK FROM SCORES
+SELECT SCORE, DENSE_RANK() OVER(ORDER BY SCORE DESC) AS 'RANK' FROM SCORES

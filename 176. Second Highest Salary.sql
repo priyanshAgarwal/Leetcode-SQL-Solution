@@ -13,16 +13,6 @@ Write a SQL query to get the second highest salary from the Employee table.
 */
 -- Import Point to understand here is inner query will take care of the NULL values if the table is empty.
 -- This solution only took 154ms
-
-
-SELECT (SELECT DISTINCT
-            Salary
-        FROM
-            Employee
-        ORDER BY Salary DESC
-        LIMIT 1 OFFSET 1)  AS SecondHighestSalary;
-
-
 -- Use of Rank, Query took 854ms, Remember ISNULL is important in case there is no Data.
 -- Dense Rank is much more usefull here, because Dense Rank won't skip the number. 
 
@@ -31,7 +21,8 @@ SELECT ISNULL( (SELECT SALARY FROM
 WHERE SR.SAL_RANK=2) ,NULL) AS SecondHighestSalary ;
 
 
-
-SELECT min(Salary) as SecondHighestSalary 
-FROM (SELECT *, DENSE_RANK() OVER(ORDER BY SALARY DESC) AS SAL_RANK FROM EMPLOYEE) AS A 
+-- If Data can't find the second highest then NUll would be returned for NULL
+SELECT MAX(SALARY) AS SecondHighestSalary 
+FROM (SELECT SALARY, DENSE_RANK() OVER(ORDER BY SALARY DESC) AS SAL_RANK
+FROM EMPLOYEE) AS A
 WHERE A.SAL_RANK=2

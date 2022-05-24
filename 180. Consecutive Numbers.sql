@@ -70,6 +70,14 @@ FROM
 [6, 2, 2], 
 [7, 2, 3]	
 
+["id", "num", "rw", "rn"], 
+[1, 1, 1, 1], 
+[2, 1, 2, 2], 
+[3, 1, 3, 3], 
+[4, 2, 4, 1], 
+[5, 1, 5, 4], 
+[6, 2, 6, 2], 
+[7, 2, 7, 3]]}
 */
 
 SELECT DISTINCT NUM AS ConsecutiveNums FROM (SELECT ID, NUM, 
@@ -79,10 +87,20 @@ FROM LOGS) AS A
 WHERE A.NUM=A.PREVIOUS_NUM AND A.NUM=A.NEXT_NUM
 
 -- Gap and Island
-SELECT NUM AS ConsecutiveNums  
-FROM (SELECT 
-    *, 
-    ID-DENSE_RANK() OVER(PARTITION BY NUM ORDER BY ID) AS GROUP_INGS
+SELECT DISTINCT NUM AS ConsecutiveNums 
+FROM (SELECT *, 
+    ROW_NUMBER() OVER(ORDER BY ID) AS ROW_NUM,
+    ROW_NUMBER() OVER(PARTITION BY NUM ORDER BY ID) AS ROW_RANK
 FROM LOGS) AS A
-GROUP BY GROUP_INGS,NUM
-HAVING COUNT(ID)>=3
+GROUP BY ROW_NUM-ROW_RANK, NUM
+HAVING COUNT(*)>2
+
+/*
+["id", "num", "NUM_GROUP"], 
+[1, 1, 0], 
+[2, 2, 1]
+[3, 1, 1], 
+[4, 1, 1]
+
+Why have to use NUM also in group by because number 2 and 1 both got same ranks.
+*/
