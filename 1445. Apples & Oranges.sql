@@ -51,30 +51,13 @@ Day 2020-05-04, 15 apples and 16 oranges were sold (Difference 15 - 16 = -1).
 */
 
 
+
 --Method 1
-
-Select 
-    A.sale_date,
-    (A.sold_num-B.sold_num) AS DIFF
-FROM 
-(SELECT sale_date, fruit, sold_num
-FROM Sales
-WHERE fruit='apples') as A
-LEFT JOIN 
-(SELECT sale_date, fruit, sold_num
-FROM Sales
-WHERE fruit='oranges') as B
-ON A.sale_date=B.sale_date;
-
+SELECT SALE_DATE, SUM(CASE WHEN FRUIT='apples' THEN SOLD_NUM ELSE -SOLD_NUM END) AS DIFF
+FROM SALES
+GROUP BY 1
 
 --Method 2
-SELECT 
-    SALE_DATE,
-    SUM(IF(FRUIT='apples',sold_num,-sold_num)) As diff
-FROM Sales
-GROUP BY SALE_DATE;
-
---Method 3
 WITH SALES_PIVOT AS ( 
 SELECT 
     sale_date,  
@@ -85,7 +68,7 @@ SELECT
     
 SELECT sale_date, (APPLES-ORANGE) AS diff  FROM SALES_PIVOT;
 
---Method 4 (Pivot Table)
+--Method 3 (Pivot Table)
 WITH SALES_PIVOT as(
     select sale_date, apples, oranges
     from Sales
