@@ -33,30 +33,10 @@ Write a sql to find the name of the winning candidate, the above example will re
 
 */
 
-Select distinct c.Name As Name
-from Candidate c
-where c.id = (Select CandidateId 
-from Vote
-Group by CandidateId  
-order by count(CandidateId) desc
-limit 1)
-
-
-SELECT B.NAME FROM (SELECT CandidateId, COUNT(*) AS VOTE_COUNT
-FROM VOTE 
-GROUP BY CandidateId 
-ORDER BY VOTE_COUNT DESC 
-LIMIT 1) A
-INNER JOIN Candidate B
-ON A.CandidateId=B.id
-
--- Method 3
-WITH CTE AS (
-SELECT CandidateId, DENSE_RANK() OVER(ORDER BY COUNT(CandidateId) DESC) AS VOTE_RANK
-FROM VOTE
-GROUP BY CandidateId)
-
-SELECT A.NAME FROM CANDIDATE A
-LEFT JOIN CTE B
-ON A.ID=B.CANDIDATEID
-WHERE VOTE_RANK=1
+SELECT NAME FROM (SELECT 
+A.NAME, DENSE_RANK() OVER(ORDER BY COUNT(B.ID) DESC) AS VOTE_RNK
+FROM CANDIDATE A
+LEFT JOIN VOTE B
+ON A.ID=B.candidateId
+GROUP BY 1) AS A
+WHERE A.VOTE_RNK=1
