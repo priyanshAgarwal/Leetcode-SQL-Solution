@@ -92,11 +92,10 @@ sum(amount) over (order by visited_on rows between 6 preceding and current row) 
 ["2019-01-07", 150, 860], (100+110+120+130+110+140+150)
 ["2019-01-08", 80, 840],  (110+120+130+110+140+150+80) leaving '2019-01-01'
 ["2019-01-09", 110, 840], (120+130+110+140+150+80+110)
-["2019-01-10", 130, 850], (130+110+140+150+80+110+130) 
-["2019-01-10", 150, 870]  (130+110+140+150+80+110+150) 
+["2019-01-10", 130, 850], (130+110+140+150+80+110+130) Avg. 121.4, Sql is counting 8 without grouping should be 7
+["2019-01-10", 150, 870]  (130+110+140+150+80+110+150) Avg. 124.2, Sql is counting 8 without grouping  should be 7
 
 For above code we hace two rows for same date
-
 */
 
 # Write your MySQL query statement below
