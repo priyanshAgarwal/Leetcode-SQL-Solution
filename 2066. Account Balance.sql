@@ -69,6 +69,14 @@ Account 2:
 - 2021-12-12 --> withdraw 7000. Balance is 7000 - 7000 = 0.
 
 */
+
+-- Method 1
+SELECT ACCOUNT_ID,DAY, 
+    SUM(CASE WHEN TYPE='Withdraw' THEN -1*AMOUNT ELSE AMOUNT END) OVER(PARTITION BY ACCOUNT_ID ORDER BY DAY) AS BALANCE
+FROM Transactions 
+
+
+-- Method 2
 WITH CTE AS (
 SELECT 
     ACCOUNT_ID,

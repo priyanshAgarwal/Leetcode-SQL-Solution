@@ -59,6 +59,12 @@ Corona Masks stock was bought at day 1 for 10$ and was sold at day 3 for 1010$. 
 
 */
 
+-- Method 1
+SELECT stock_name, 
+SUM(CASE WHEN OPERATION='Buy' THEN -PRICE ELSE PRICE END) AS capital_gain_loss  FROM STOCKS
+GROUP BY 1
+
+-- Method 2
 SELECT DISTINCT stock_name,    
     SUM(CASE WHEN operation='Buy' THEN -1*PRICE ELSE PRICE END) 
     OVER(PARTITION BY stock_name) AS  capital_gain_loss 
