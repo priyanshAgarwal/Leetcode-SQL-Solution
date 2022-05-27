@@ -81,8 +81,9 @@ On 2013-10-03:
 
 */
 
-SELECT Request_at as Day,
-round(sum(case when Status like 'cancelled_%' then 1 else 0 end)/count(*),2) AS 'Cancellation Rate'
+SELECT
+    REQUEST_AT AS day,
+    ROUND(COUNT(CASE WHEN STATUS<>'completed' THEN ID ELSE NULL END)*1.0/COUNT(DISTINCT ID),2) AS "Cancellation Rate"
 FROM Trips
 WHERE Client_Id NOT IN (SELECT DISTINCT USERS_ID FROM USERS WHERE BANNED = 'YES')
 AND Driver_Id  NOT IN (SELECT DISTINCT USERS_ID FROM USERS WHERE BANNED = 'YES')
@@ -104,7 +105,6 @@ SELECT
     COUNT(*) AS TOTAL_COUNT
 FROM TRIPS_1
 GROUP BY Request_at)
-
 
 SELECT 
     Request_at AS DAY,

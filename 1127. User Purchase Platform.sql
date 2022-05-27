@@ -63,14 +63,24 @@ Explanation:
 On 2019-07-01, user 1 purchased using both desktop and mobile, user 2 purchased using mobile only and user 3 purchased using desktop only.
 On 2019-07-02, user 2 purchased using mobile only, user 3 purchased using desktop only and no one purchased using both platforms.
 
+
+
+["user_id", "spend_date", "mobile_amount", "desktop_amount", "both"], 
+[1, "2019-07-01", 100, 100, 200], 
+[2, "2019-07-01", 100, 0, 0], 
+[2, "2019-07-02", 100, 0, 0], 
+[3, "2019-07-01", 0, 100, 0], 
+[3, "2019-07-02", 0, 100, 0]]}
+
+SELECT SPEND_DATE,  FROM TABLE
 */
 
 WITH ALL_VALUES AS ( 
-SELECT SPEND_DATE, 'mobile' AS PLATFORM FROM SPENDING GROUP BY SPEND_DATE
+SELECT SPEND_DATE, 'mobile' AS PLATFORM FROM SPENDING 
 UNION
-SELECT SPEND_DATE, 'desktop' AS PLATFORM FROM SPENDING GROUP BY SPEND_DATE
+SELECT SPEND_DATE, 'desktop' AS PLATFORM FROM SPENDING
 UNION 
-SELECT SPEND_DATE, 'both' AS PLATFORM FROM SPENDING GROUP BY SPEND_DATE
+SELECT SPEND_DATE, 'both' AS PLATFORM FROM SPENDING
 ),
 
 COUNT_SPENDING AS(

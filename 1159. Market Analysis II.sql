@@ -96,24 +96,19 @@ The answer for the user with id 4 is no because the brand of their second sold i
 
 */
 
-With tmp AS (
-SELECT seller_id,
-RANK() OVER (PARTITION BY seller_id ORDER BY order_date) AS ranks,
-b.item_brand
-FROM Orders a
-INNER JOIN Items b
-ON a.item_id = b.item_id
-),
-
-tmp2 AS (
-SELECT seller_id, item_brand FROM tmp
-WHERE ranks = 2
+With CTE AS (
+SELECT 
+SELLER_ID,
+DENSE_RANK() OVER (PARTITION BY seller_id ORDER BY order_date) AS SOLD_RANK,
+B.ITEM_BRAND
+FROM ORDERS A
+INNER JOIN ITEMS B
+ON A.ITEM_ID = B.ITEM_BRAND
 )
 
-
-SELECT user_id AS seller_id, 
-CASE
-    WHEN item_brand=favorite_brand THEN 'YES' ELSE 'NO' END AS 2nd_item_fav_brand 
-FROM tmp2 A
-RIGHT JOIN Users B
-ON A.seller_id=B.user_ID
+SELECT 
+    USER_ID AS seller_id, 
+    CASE WHEN FAVORITE_BRAND=ITEM_BRAND THEN 'yes' ELSE 'no' END AS '2nd_item_fav_brand' 
+FROM USERS A
+LEFT JOIN CTE B
+ON A.USER_ID=B.SELLER_ID AND SOLD_RANK=2
