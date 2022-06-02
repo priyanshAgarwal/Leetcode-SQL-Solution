@@ -85,21 +85,24 @@ Explanation:
 - Passenger 14 arrives at time 7.
 - Bus 3 arrives at time 7 and collects passengers 12, 13, and 14.
 
+Why Lead would not work here, but lag would. 
 
+["bus_id", "arrival_time", "NEXT_BUS_TIME"], Lead Code
+[1, 2, 4], [2, 4, 7], [3, 7, 0]]}
+
+
+["bus_id", "arrival_time", "NEXT_BUS_TIME"], Lag Code
+ "values": [[1, 2, 0], [2, 4, 2], [3, 7, 4]
 */
 
 
-WITH cte AS (
-SELECT bus_id, arrival_time,
-LAG(arrival_time,1,0) OVER (ORDER BY arrival_time) prev_bus_time
-FROM buses
-)
+WITH BUS_CTE AS (
+SELECT bus_id, arrival_time, LAG(ARRIVAL_TIME,1,0) OVER(ORDER BY ARRIVAL_TIME) AS PREV_BUS_TIME FROM BUSES)
 
-
-SELECT bus_id, count(passenger_id) as passengers_cnt 
-FROM cte a
-left join passengers b
-on b.arrival_time  between a.prev_bus_time and a.arrival_time
-group by 1
-order by 1
+SELECT A.BUS_ID, COUNT(DISTINCT B.PASSENGER_ID) AS passengers_cnt 
+FROM BUS_CTE A
+LEFT JOIN PASSENGERS B
+ON B.ARRIVAL_TIME > A.PREV_BUS_TIME AND B.ARRIVAL_TIME<=A.ARRIVAL_TIME
+GROUP BY 1
+ORDER BY 1
 

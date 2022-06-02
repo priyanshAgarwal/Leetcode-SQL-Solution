@@ -86,6 +86,9 @@ Follow up:
 What if the first condition changed to be "any medal in n or more consecutive contests"? How would you change your solution to get the interview candidates? Imagine that n is the parameter of a stored procedure.
 Some users may not participate in every contest but still perform well in the ones they do. How would you change your solution to only consider contests where the user was a participant? Suppose the registered users for each contest are given in another table.
 
+
+["CONTEST_ID", "USER_ID", "NEXT_MEDAL_USER", "PREV_MEDAL_USER"], "values": [[190, 2, 5, null], [191, 5, 3, 2], [192, 3, 5, 5], [193, 5, 2, 3], [194, 2, 1, 5], [195, 1, 2, 2], [196, 2, null, 1], [190, 1, 2, null], [191, 2, 5, 1], [192, 5, 1, 2], [193, 1, 4, 5], [194, 4, 4, 1], [195, 4, 1, 4], [196, 1, null, 4], [190, 5, 3, null], [191, 3, 2, 5], [192, 2, 3, 3], [193, 3, 5, 2], [194, 5, 2, 3], [195, 2, 5, 5], [196, 5, null, 2]]}
+
 */
 
 -- METHOD 1 CONSIQUTIVE QUESTION 

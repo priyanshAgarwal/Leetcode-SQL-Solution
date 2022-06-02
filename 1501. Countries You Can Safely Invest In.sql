@@ -101,9 +101,57 @@ The average call duration for Israel is (33 + 4 + 13 + 13 + 3 + 1 + 1 + 7) / 8 =
 The average call duration for Morocco is (33 + 4 + 59 + 59 + 3 + 7) / 6 = 27.5000 
 Global call duration average = (2 * (33 + 4 + 59 + 102 + 330 + 5 + 13 + 3 + 1 + 7)) / 20 = 55.70000
 Since Peru is the only country where average call duration is greater than the global average, it's the only recommended country.
+
+
+["CALLER_ID", "DURATION", "COUNTRY"], 
+[1, 33, "Morocco"], 
+[2, 4, "Morocco"], 
+[1, 59, "Morocco"], 
+[3, 102, "Peru"], 
+[3, 330, "Peru"], 
+[12, 5, "Peru"], 
+[7, 13, "Israel"], [7, 3, "Israel"], [9, 1, "Israel"], [1, 7, "Morocco"], [9, 33, "Morocco"], [9, 4, "Morocco"], [2, 59, "Morocco"], [12, 102, "Peru"], [12, 330, "Peru"], [3, 5, "Peru"], [9, 13, "Israel"], [1, 3, "Israel"], [7, 1, "Israel"], [7, 7, "Morocco"]]}
 */
 
-# Write your MySQL query statement below
+
+-- Better Code
+
+WITH PERSON AS (
+SELECT A.ID, B.NAME AS COUNTRY 
+FROM PERSON A
+INNER JOIN COUNTRY B
+ON LEFT(PHONE_NUMBER,3)=B.COUNTRY_CODE),
+
+AVERAGE_DATA AS (
+SELECT
+    CALLER_ID,
+    DURATION,
+    COUNTRY
+FROM CALLS A
+INNER JOIN PERSON B
+ON A.CALLER_ID=B.ID    
+UNION ALL
+SELECT
+    CALLEE_ID,
+    DURATION,
+    COUNTRY
+FROM CALLS A
+INNER JOIN PERSON B
+ON A.CALLER_ID=B.ID)
+
+SELECT country   
+FROM (SELECT 
+    DISTINCT 
+    B.COUNTRY, 
+    AVG(DURATION) OVER(PARTITION BY B.COUNTRY) AS COUNTRY_AVG,
+    AVG(DURATION) OVER() AS OVERALL_AVG
+FROM AVERAGE_DATA A
+INNER JOIN PERSON B
+ON A.CALLER_ID=B.ID
+) AS A
+WHERE A.COUNTRY_AVG>A.OVERALL_AVG
+
+-- # Write your MySQL query statement below
 
 WITH COUNT_NAME_ID AS (
 SELECT A.ID, B.NAME AS COUNTRY_NAME FROM 

@@ -71,35 +71,17 @@ Can you write a general solution if the active users are those who logged in to 
 
 Longest Streak
 
-{"headers": ["id", "login_date", "LOGIN_RANK", "DATE_GROUPING"],
- "values": [
-    [27, "2020-06-26", 1, "2020-06-25"], 
-    [27, "2020-06-27", 2, "2020-06-25"], 
-    [27, "2020-06-28", 3, "2020-06-25"], 
-    [27, "2020-06-29", 4, "2020-06-25"], 
-    [27, "2020-06-29", 4, "2020-06-25"], 
-    [27, "2020-07-01", 5, "2020-06-26"], 
-    [27, "2020-07-02", 6, "2020-06-26"], 
-    [27, "2020-07-04", 7, "2020-06-27"], 
-    [31, "2020-06-26", 1, "2020-06-25"], 
-    [31, "2020-06-28", 2, "2020-06-26"], 
-    [31, "2020-06-29", 3, "2020-06-26"], 
-    [31, "2020-06-29", 3, "2020-06-26"], 
-    [31, "2020-06-30", 4, "2020-06-26"], 
-    [31, "2020-07-02", 5, "2020-06-27"], 
-    [31, "2020-07-02", 5, "2020-06-27"], 
-    [31, "2020-07-03", 6, "2020-06-27"], 
-    [31, "2020-07-03", 6, "2020-06-27"], 
-    [31, "2020-07-04", 7, "2020-06-27"], 
-    [49, "2020-06-30", 1, "2020-06-29"], 
-    [49, "2020-07-01", 2, "2020-06-29"], 
-    [49, "2020-07-02", 3, "2020-06-29"], 
-    [49, "2020-07-03", 4, "2020-06-29"], 
-    [49, "2020-07-04", 5, "2020-06-29"],
-    [49, "2020-07-05", 6, "2020-06-29"], 
-    [119, "2020-06-26", 1, "2020-06-25"]
+["ID", "NAME", "LOGIN_DATE", "GROUP_DATE"], 
+[1, "Winston", "2020-05-30", 0],
+[1, "Winston", "2020-06-07", 4], 
+[7, "Jonathan", "2020-05-30", 0], 
+[7, "Jonathan", "2020-05-31", 0], 
+[7, "Jonathan", "2020-06-01", 0], 
+[7, "Jonathan", "2020-06-02", 0], 
+[7, "Jonathan", "2020-06-02", 0], 
+[7, "Jonathan", "2020-06-03", 0], 
+[7, "Jonathan", "2020-06-10", 1]]}
 */
-
 
 -- Smart Way Use Lag (Remeber to first get distinct values)
 WITH CTE AS (
@@ -131,3 +113,27 @@ SELECT * FROM ACCOUNTS WHERE ID IN ( SELECT ID FROM CTE_2
 GROUP BY ID,DATE_GROUP
 HAVING  COUNT(*)>=5)
 ORDER BY 1
+
+-- Method 3 (Gap and Island)
+WITH CTE AS (
+SELECT DISTINCT *, 
+    DENSE_RANK() OVER(ORDER BY LOGIN_DATE) AS ROW_NUM,
+    DENSE_RANK() OVER(PARTITION BY ID ORDER BY LOGIN_DATE) AS ROW_RANK
+FROM LOGINS  
+),
+
+CTE1 AS 
+(
+SELECT A.ID, B.NAME, A.LOGIN_DATE, ROW_NUM-ROW_RANK AS GROUP_DATE 
+FROM CTE A
+INNER JOIN ACCOUNTS B
+ON A.ID=B.ID)
+
+
+SELECT * FROM Accounts WHERE ID IN(SELECT ID FROM CTE1
+GROUP BY ID,GROUP_DATE
+HAVING COUNT(*)>4)
+ORDER BY 1
+
+
+

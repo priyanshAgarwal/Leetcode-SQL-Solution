@@ -96,7 +96,39 @@ LC Keychain was sold for the period of 2019-12-01 to 2020-01-31, and there are 3
 
 */
 
+-- Method 1 (My Method)
+# Write your MySQL query statement below
+WITH RECURSIVE CTE AS (
+    SELECT PRODUCT_ID, PERIOD_START, PERIOD_END,average_daily_sales  FROM SALES
+    UNION ALL
+    SELECT  PRODUCT_ID, DATE_ADD(PERIOD_START,INTERVAL 1 DAY) AS PERIOD_START,PERIOD_END,average_daily_sales 
+    FROM CTE
+    WHERE PERIOD_START<PERIOD_END
+),
 
+-- ADDITIONAL STEP TO UNDERSTAND NUMBER OF DAYS
+CTE2 AS (
+SELECT 
+    A.product_id,
+    B.product_name,
+    date_format(period_start, "%Y") AS report_year,
+    COUNT(period_start) AS NUMBER_OF_DAYS,
+    average_daily_sales
+    FROM CTE A
+INNER JOIN PRODUCT B
+ON A.PRODUCT_ID=B.PRODUCT_ID
+GROUP BY 1,2,3)
+
+
+SELECT 
+    product_id,
+    product_name,
+    report_year,
+    NUMBER_OF_DAYS*average_daily_sales AS total_amount
+FROM CTE2
+ORDER BY 1,3
+
+-- Method 2
 WITH RECURSIVE CTE AS (
 SELECT MIN(period_start) as all_date FROM Sales
 UNION

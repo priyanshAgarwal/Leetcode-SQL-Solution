@@ -112,4 +112,3 @@ FROM Signups A
 LEFT JOIN Confirmations B
 ON A.user_id =B.user_id
 GROUP BY A.user_id;
-
