@@ -63,3 +63,11 @@ Juan's salary of 6100 is not included in the ranking because they are not on a t
 
 */
 
+WITH CTE AS (
+SELECT *, 
+COUNT(SALARY) OVER(PARTITION BY SALARY) AS NUM_OF_SALARY
+FROM EMPLOYEES)
+
+SELECT employee_id,name,salary,DENSE_RANK() OVER(ORDER BY salary) AS team_id
+FROM CTE 
+WHERE NUM_OF_SALARY>1
