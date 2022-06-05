@@ -52,6 +52,15 @@ The average activity for each event can be calculated as follows:
 The business with id=1 has 7 'reviews' events (more than 5) and 11 'ads' events (more than 8), so it is an active business.
 
 
+["business_id", "event_type", "occurences", "AVG_OCCURENCE"], 
+[1, "ads", 11, 8.0000], 
+[1, "page views", 3, 7.5000], 
+[1, "reviews", 7, 5.0000], 
+[2, "ads", 7, 8.0000], 
+[2, "page views", 12, 7.5000], 
+[3, "ads", 6, 8.0000], 
+[3, "reviews", 3, 5.0000]
+
 */
 select business_id from 
 (
