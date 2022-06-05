@@ -2,8 +2,6 @@
 Trips in Consecutive Months
 Find the IDs of the drivers who completed at least one trip in at least two consecutive months.
 
-
-
 */
 
 -- METHOD 1

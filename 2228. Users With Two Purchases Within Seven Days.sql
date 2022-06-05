@@ -59,6 +59,9 @@ User 5 had only 1 purchase.
 User 7 had two purchases on the same day so we add their ID.
 
 
+["user_id", "purchase_date", "lead_purchase_date"], 
+[2, "2022-03-13", "2022-03-20"], 
+[7, "2022-06-19", "2022-06-19"]]}
 
 */
 
@@ -70,11 +73,15 @@ FROM PURCHASES) AS A
 WHERE CNT=2
 
 -- METHOD 2
+
+/*
+Understand the concept if there are two dates 7 days,
+apart then there must be an purchase as well
+*/
 WITH CTE AS(
     SELECT DISTINCT USER_ID,PURCHASE_DATE, 
 LEAD(PURCHASE_DATE,1) OVER(PARTITION BY USER_ID ORDER BY PURCHASE_DATE) AS NEXT_SHOPPIN,
-DATE_ADD(PURCHASE_DATE, INTERVAL 7 DAY) AS NEXT_7_DAY FROM PURCHASES)
-
-
+DATE_ADD(PURCHASE_DATE, INTERVAL 7 DAY) AS NEXT_7_DAY 
+FROM PURCHASES)
 SELECT USER_ID FROM CTE WHERE
 DATEDIFF(NEXT_SHOPPIN,PURCHASE_DATE)<=7
