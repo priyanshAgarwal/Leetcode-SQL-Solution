@@ -123,3 +123,20 @@ New Zealand did not gain or lose points and their rank did not change.
 [2, "New Zealand", 1402, 1402, 4, 3]
 
 */
+
+
+WITH CTE AS (
+SELECT 
+    A.TEAM_ID,
+    A.NAME,
+DENSE_RANK() OVER(ORDER BY POINTS DESC, NAME) AS BEFORE_RANK,
+DENSE_RANK() OVER(ORDER BY POINTS+POINTS_CHANGE DESC, NAME) AS NEW_RANK
+FROM TeamPoints as a
+INNER JOIN PointsChange as b
+ON a.team_id=b.team_id)
+
+SELECT     
+    TEAM_ID,
+    NAME,
+    CAST(BEFORE_RANK AS SIGNED)-CAST(NEW_RANK AS SIGNED) AS rank_diff 
+FROM CTE
