@@ -13,6 +13,7 @@ The Employee table holds all employees including their managers. Every employee 
 |105   |Anne 	  |A 	      |101       |
 |106   |Ron 	  |B 	      |101       |
 +------+----------+-----------+----------+
+
 Given the Employee table, write a SQL query that finds out managers with at least 5 direct report. For the above table, your SQL query should return:
 
 +-------+
