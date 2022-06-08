@@ -59,11 +59,12 @@ Hence, half the customers have immediate first orders.
 WITH FIRST_ORDER AS (
     select *,
     DENSE_RANK() OVER(PARTITION BY CUSTOMER_ID ORDER BY ORDER_DATE) AS ORDER_NUMBER,
-    CASE WHEN order_date = customer_pref_delivery_date THEN 1 ELSE 0 END AS ORDER_TYPE
+    CASE WHEN order_date = customer_pref_delivery_date THEN 'immediate' ELSE 'scheduled' END AS ORDER_TYPE
 FROM Delivery)
 
---Without Groupby we can use count as well
-SELECT ROUND(SUM(ORDER_TYPE)*100/COUNT(*),2) AS immediate_percentage  FROM FIRST_ORDER
+
+SELECT ROUND(COUNT(DISTINCT CASE WHEN ORDER_TYPE='immediate' THEN delivery_id ELSE NULL END)*100.0/COUNT(DISTINCT delivery_id),2) AS immediate_percentage  
+FROM FIRST_ORDER
 WHERE ORDER_NUMBER=1
 
 
