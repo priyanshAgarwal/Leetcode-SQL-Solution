@@ -86,7 +86,4 @@ User one is friend with users 2, 3, 4 and 6.
 Suggested pages are 23 from user 2, 24 from user 3, 56 from user 3 and 33 from user 6.
 Page 77 is suggested from both user 2 and user 3.
 Page 88 is not suggested because user 1 already likes it.
-
-
-
 */
