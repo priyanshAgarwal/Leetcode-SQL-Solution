@@ -49,12 +49,13 @@ Product 1 price's are 70 for store1, 80 for store3 and, it's not sold in store2.
 -- Pivot
 -- Method 1  
 -- We could also use SUM vs MAX, so remember what to use.
-(SELECT
-  product_id,
-  SUM(CASE WHEN store = 'store1' THEN price END) AS store1,
-  SUM(CASE WHEN store = 'store2' THEN price END) AS store2,
-  SUM(CASE WHEN store = 'store3' THEN price END) AS store3
-FROM Products GROUP BY product_id)
+SELECT 
+    PRODUCT_ID,
+    MAX(CASE WHEN STORE='store1' THEN PRICE END) AS STORE1,
+    MAX(CASE WHEN STORE='store2' THEN PRICE END) AS STORE2,
+    MAX(CASE WHEN STORE='store3' THEN PRICE END) AS STORE3
+FROM PRODUCTS 
+GROUP BY 1
 
 -- Method 2
 -- Pivot Table
@@ -66,38 +67,3 @@ PIVOT
     for store
     in (store1,store2,store3)
 ) AS PI_TAB
-
--- Inefficient Long Solution using Joins
--- Method 3
-WITH store1_ AS (
-SELECT product_id, 
-    price AS store1
-FROM Products
-WHERE store = 'store1'),
-
-store2_ AS (
-SELECT product_id,
-    price AS store2
-FROM Products
-WHERE store = 'store2'),
-
-store3_ AS (
-SELECT product_id, 
-    price AS store3
-FROM Products
-WHERE store = 'store3'),
-
-all_products AS (
-SELECT DISTINCT product_id
-FROM Products)
-
-SELECT all_products.product_id, store1, store2, store3
-FROM all_products 
-LEFT JOIN store1_
-ON all_products.product_id = store1_.product_id
-LEFT JOIN store2_
-ON all_products.product_id = store2_.product_id
-LEFT JOIN store3_
-ON all_products.product_id = store3_.product_id
-
--- Method 3
