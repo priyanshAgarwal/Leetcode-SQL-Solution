@@ -157,6 +157,8 @@ WITH RECURSIVE ALL_MONTHS AS (
 ),
 
 
+-- Don't put specific dates in order by clause because the number of count would be different
+-- you want all the drivers for the month not specific date
 ACTIVE_DRIVERS AS (
 SELECT LIST_MONTH, COUNT(DRIVER_ID) OVER(ORDER BY LIST_MONTH) + (SELECT COUNT(DRIVER_ID) FROM DRIVERS WHERE YEAR(JOIN_DATE) < 2020) AS ACTIVE_DRIVERS 
 FROM ALL_MONTHS A 

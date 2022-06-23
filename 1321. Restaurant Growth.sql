@@ -98,7 +98,6 @@ sum(amount) over (order by visited_on rows between 6 preceding and current row) 
 For above code we hace two rows for same date
 */
 
-# Write your MySQL query statement below
 WITH CTE AS(
 SELECT VISITED_ON, SUM(AMOUNT) AS AMOUNT FROM CUSTOMER GROUP BY 1),
 

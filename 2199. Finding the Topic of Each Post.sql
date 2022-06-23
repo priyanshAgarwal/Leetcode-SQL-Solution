@@ -96,6 +96,10 @@ This post is ambiguous.
 
 Note that it is okay to have one word that expresses more than one topic.
 
-
-
 */
+SELECT 
+post_id, IFNULL(GROUP_CONCAT(DISTINCT topic_id), "Ambiguous!") as topic
+FROM POSTS A
+LEFT JOIN KEYWORDS B
+ON content REGEXP CONCAT('\\b',word,'\\b') 
+GROUP BY post_id

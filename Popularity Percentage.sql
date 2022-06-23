@@ -17,3 +17,20 @@ select user2 as user_id from facebook_friends)
 select user_id, round(count(*)*100/ count(*) over()::decimal,3) from all_friends
 group by user_id
 order by user_id;
+
+-- My Method
+with cte as 
+(select user1 as user, user2 as friend from facebook_friends
+union
+select user2 as user, user1 as friend from facebook_friends),
+
+cte2 as (
+select 
+    distinct
+    user, 
+    count(friend) over(partition by user) as number_of_friends,
+    (select count(distinct user) from cte) as number_of_people -- Yeah you could write SQL in other line
+from cte)
+
+select user,number_of_friends,number_of_people from cte2
+

@@ -61,16 +61,31 @@ Similarly, user 4 on 2021-08-24 had their first and last call with user 8. User 
 On 2021-08-11, user 1 and 5 had a call. This call was the only call for both of them on this day. Since this call is the first and last call of the day for both of them, they should both be included in the answer.
 
 
-["CALL_FROM", "CALL_TO", "DAY"]
-[1, 5, "2021-08-11"], 
-[3, 8, "2021-08-17"], 
-[3, 11, "2021-08-17"], 
-[4, 8, "2021-08-24"], 
-[4, 8, "2021-08-24"], 
-[5, 1, "2021-08-11"], 
-[8, 3, "2021-08-17"], 
-[8, 4, "2021-08-24"], 
-[11, 3, "2021-08-17"], 
-[11, 8, "2021-08-17"]
-
+["user_id", "reciever_id", "call_time", "FIRST_VALUE_USER", "LAST_VALUE_USER"]
+    
+[1, 5, "2021-08-11", 5, 5], 
+[3, 8, "2021-08-17", 8, 11], 
+[3, 11, "2021-08-17", 8, 11], 
+[4, 8, "2021-08-24", 8, 8], 
+[5, 1, "2021-08-11", 1, 1], 
+[8, 3, "2021-08-17", 3, 11], 
+[8, 11, "2021-08-17", 3, 11], 
+[8, 4, "2021-08-24", 4, 4], 
+[11, 3, "2021-08-17", 3, 8], 
+[11, 8, "2021-08-17", 3, 8]]}
 */
+
+WITH CTE AS (
+select CALLER_ID AS USER_ID, RECIPIENT_ID AS RECIEVER_ID ,CALL_TIME from Calls
+union 
+select RECIPIENT_ID AS USER_ID, CALLER_ID as  RECIEVER_ID ,CALL_TIME from Calls),
+            
+FIRST_LAST_CALL AS (
+    SELECT  USER_ID,
+first_value(reciever_id) over (partition by user_id,date(call_time) order by call_time) first_recipient_id,
+first_value(reciever_id) over (partition by user_id,date(call_time) order by  call_time desc) last_recipient_id   
+    FROM CTE
+)
+
+SELECT DISTINCT USER_ID FROM FIRST_LAST_CALL
+WHERE first_recipient_id=last_recipient_id

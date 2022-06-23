@@ -130,28 +130,31 @@ ORDER BY 1,3
 
 -- Method 2
 WITH RECURSIVE CTE AS (
-SELECT MIN(period_start) as all_date FROM Sales
-UNION
-SELECT DATE_ADD(all_date, interval 1 day)
-FROM CTE
-WHERE all_date < (SELECT MAX(period_end) FROM Sales)),
-    
-CTE2 AS (  
-SELECT ALL_DATE, PRODUCT_ID, PERIOD_START, PERIOD_END, average_daily_sales
-FROM CTE 
-LEFT JOIN Sales
-ON all_date BETWEEN period_start AND period_end)
+    SELECT PRODUCT_ID, PERIOD_START, PERIOD_END,average_daily_sales  FROM SALES
+    UNION ALL
+    SELECT  PRODUCT_ID, DATE_ADD(PERIOD_START,INTERVAL 1 DAY) AS PERIOD_START,PERIOD_END,average_daily_sales 
+    FROM CTE
+    WHERE PERIOD_START<PERIOD_END
+),
+
+CTE2 AS (
+SELECT 
+    A.product_id,
+    B.product_name,
+    date_format(period_start, "%Y") AS report_year,
+    COUNT(period_start) AS NUMBER_OF_DAYS,
+    average_daily_sales
+    FROM CTE A
+INNER JOIN PRODUCT B
+ON A.PRODUCT_ID=B.PRODUCT_ID
+GROUP BY 1,2,3)
 
 
 SELECT 
-    A.PRODUCT_ID,
-    B.PRODUCT_NAME,
-    LEFT(ALL_DATE,4) AS REPORT_YEAR,
-    SUM(AVERAGE_DAILY_SALES) AS TOTAL_AMOUNT
-FROM CTE2 A
-INNER JOIN PRODUCT B
-ON A.PRODUCT_ID=B.PRODUCT_ID
-GROUP BY 1,2,3
+    product_id,
+    product_name,
+    report_year,
+    NUMBER_OF_DAYS*average_daily_sales AS total_amount
+FROM CTE2
 ORDER BY 1,3
-
 
