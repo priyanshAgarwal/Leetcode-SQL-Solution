@@ -63,21 +63,21 @@ The product with id 1 was only sold in spring 2019 while the other two were sold
 */
 
 -- First Method
-WITH CTE AS (
-SELECT product_id, 
-    MAX(sale_date) AS last_sale,
-    MIN(sale_date)  AS first_sale
-FROM Sales
-GROUP BY product_id )
-
-SELECT P.product_id, P.product_name 
-FROM CTE A
-INNER JOIN Product P
-ON A.product_id = P.product_id 
-WHERE first_sale >='2019-01-01' AND last_sale<='2019-03-31'
+SELECT B.PRODUCT_ID, B.PRODUCT_NAME FROM 
+(SELECT 
+    PRODUCT_ID,
+    MIN(sale_date) AS SALE_FROM,
+    MAX(sale_date) AS SALE_TILL
+FROM Sales  
+GROUP BY 1) AS A
+INNER JOIN PRODUCT B
+ON A.PRODUCT_ID=B.PRODUCT_ID
+WHERE QUARTER(SALE_FROM)=1 AND QUARTER(SALE_TILL)=1
+AND YEAR(SALE_FROM)='2019'
 
 
 -- Second Method (Includes all the products bought in that perioid and then exclude that)
+-- dOES NOT WORK ANYMORE WHAT IF THE PRODUCT YEAR WAS NOT 2019, SO FIST FIND THE PRODUCT THAT WERE ONLY SOLD IN 2019
 SELECT product_id, product_name
 FROM Product
 WHERE product_id NOT IN (SELECT product_id
