@@ -60,8 +60,6 @@ Result table:
 
 */
 
-SELECT A.product_id,total_quantity FROM
-PRODUCT A
-INNER JOIN (SELECT PRODUCT_ID, SUM(QUANTITY) AS total_quantity  FROM SALES
-GROUP BY 1) B
-ON A.product_id =B.product_id 
+SELECT PRODUCT_ID, SUM(quantity) AS total_quantity
+FROM SALES
+GROUP BY 1
