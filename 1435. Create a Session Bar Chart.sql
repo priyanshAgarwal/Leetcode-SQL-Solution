@@ -48,6 +48,15 @@ For session_id 5 has a duration greater or equal than 15 minutes.
 
 */
 
+SELECT '[0-5>' AS BIN, COUNT(SESSION_ID) AS total FROM SESSIONS WHERE DURATION/60<5
+UNION ALL
+SELECT '[5-10>' AS BIN, COUNT(SESSION_ID) AS total FROM SESSIONS WHERE DURATION/60 BETWEEN 5 AND 10
+UNION ALL
+SELECT '[10-15>' AS BIN, COUNT(SESSION_ID) AS total FROM SESSIONS WHERE DURATION/60 BETWEEN 10 AND 15
+UNION ALL
+SELECT '15 or more' AS BIN, COUNT(SESSION_ID) AS total FROM SESSIONS WHERE DURATION/60>15
+
+-- METHOD 2
 WITH cte AS(
 SELECT session_id, ROUND(duration*1.0/60,2) AS mins
 FROM Sessions)
@@ -69,7 +78,7 @@ SELECT '15 or more' AS bin,
 FROM cte
 
 
--- METHOD 2
+-- METHOD 3
 # Write your MySQL query statement below
 WITH CTE_1 AS(
 SELECT session_id, ROUND(duration*1.0/60,2) AS duration

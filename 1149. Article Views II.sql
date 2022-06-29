@@ -47,7 +47,7 @@ Result table:
 
 
 SELECT 
-    DISTINCT viewer_id AS ID 
-FROM (SELECT view_date,viewer_id, COUNT(DISTINCT article_id) AS ARTICLE_COUNT FROM VIEWS
-GROUP BY viewer_id, view_date) A
-WHERE ARTICLE_COUNT>1
+    DISTINCT VIEWER_ID AS ID
+FROM VIEWS
+GROUP BY VIEWER_ID,view_date 
+HAVING COUNT(DISTINCT article_id)>1

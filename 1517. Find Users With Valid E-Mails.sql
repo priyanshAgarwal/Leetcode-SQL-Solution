@@ -58,6 +58,10 @@ The mail of user 7 starts with a period.
 select *
 from Users
 WHERE mail REGEXP '^[A-Z][A-Z0-9_.-]*@leetcode.com$'
+WHERE mail REGEXP '^[A-Za-z][A-Za-z0-9_.-]*@leetcode[.]com$'
+WHERE regexp_like(mail, '^[A-Za-z]+[A-Za-z0-9_.-]*@leetcode\.com')
+WHERE mail REGEXP( "^[a-zA-Z][A-Za-z0-9\_\.\-]*@leetcode[.]com$")
+
 
 /*
     ^ Denotes first char should be alpha
