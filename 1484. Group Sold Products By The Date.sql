@@ -64,3 +64,10 @@ For 2020-06-02, the Sold item is (Mask), we just return it.
 
 
 */
+SELECT 
+    SELL_DATE,
+    COUNT(distinct  PRODUCT) AS num_sold,
+    GROUP_CONCAT(DISTINCT product ORDER BY product) AS products
+FROM Activities 
+GROUP BY 1
+ORDER BY 1
