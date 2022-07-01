@@ -27,7 +27,6 @@ Table: Product
 product_id is the primary key for this table.
 This table contains information of the products in the company.
 price is the product cost.
- 
 
 Table: Orders
 
