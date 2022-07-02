@@ -93,10 +93,13 @@ Donald did not have any rides, the distance traveled by him is 0.
 
 */
 
-select u.name, ifnull(sum(r.distance),0) as travelled_distance 
-from users u
-left join
-rides r
+SELECT name,travelled_distance FROM (select 
+    U.ID,
+    U.name,
+    coalesce(sum(r.distance),0) AS "travelled_distance"
+from users as u
+left join rides as r
 on u.id = r.user_id
-group by u.id
+group by 1,2
 order by travelled_distance desc, u.name
+) AS A
