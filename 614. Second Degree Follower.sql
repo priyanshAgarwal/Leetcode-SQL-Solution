@@ -32,6 +32,11 @@ Note:
 Followee would not follow himself/herself in all cases.
 Please display the result in follower's alphabet order.
 
+["followee", "follower", "followee", "follower"], 
+["Alice", "Bob", "Bob", "Cena"], 
+["Alice", "Bob", "Bob", "Donald"], 
+["Bob", "Donald", "Donald", "Edward"]]}
+
 */
 
 -- Ask Interviewer if there for distinct cases, Ki if same user is following again or not

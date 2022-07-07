@@ -84,6 +84,7 @@ Longest Streak
 */
 
 -- Smart Way Use Lag (Remeber to first get distinct values)
+
 WITH CTE AS (
     SELECT DISTINCT ID, LOGIN_DATE FROM LOGINS ),
     
