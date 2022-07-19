@@ -73,25 +73,13 @@ From 2019-01-06 to 2019-01-06 all tasks succeeded and system state was "succeede
 
 -- Consecutive Dates
 
-["DATE", "STATE", "G2"],
-["2019-01-01", "succeeded", 0], 
-["2019-01-02", "succeeded", 0], 
-["2019-01-03", "succeeded", 0], 
-["2019-01-04", "failed", 3], 
-["2019-01-05", "failed", 3], 
-["2019-01-06", "succeeded", 2]]}
-
-["DATE", "STATUS", "COL1", "COL2"], 
-["2018-12-28", "FAILED", 1, 1], 
-["2018-12-29", "FAILED", 2, 2], 
-["2019-01-04", "FAILED", 8, 3], 
-["2019-01-05", "FAILED", 9, 4], 
-["2018-12-30", "SUCCEEDED", 3, 1], 
-["2018-12-31", "SUCCEEDED", 4, 2], 
-["2019-01-01", "SUCCEEDED", 5, 3], 
-["2019-01-02", "SUCCEEDED", 6, 4], 
-["2019-01-03", "SUCCEEDED", 7, 5], 
-["2019-01-06", "SUCCEEDED", 10, 6]
+["DATE", "STATE", "SEQ", "DATE_DROUP"],
+["2019-01-04", "failed", 1, "2019-01-03"], 
+["2019-01-05", "failed", 2, "2019-01-03"], 
+["2019-01-01", "succeeded", 1, "2018-12-31"], 
+["2019-01-02", "succeeded", 2, "2018-12-31"], 
+["2019-01-03", "succeeded", 3, "2018-12-31"], 
+["2019-01-06", "succeeded", 4, "2019-01-02"]]}
 
 */
 
@@ -122,7 +110,8 @@ ORDER BY 2,3
 
 --Shorter Answer
 WITH CTE AS (
-SELECT *, DENSE_RANK() OVER(PARTITION BY STATE ORDER BY DATE) AS SEQ FROM(
+SELECT *, DENSE_RANK() OVER(PARTITION BY STATE ORDER BY DATE) AS SEQ 
+FROM(
 SELECT FAIL_DATE AS DATE, 'failed' AS STATE FROM FAILED
 UNION ALL
 SELECT SUCCESS_DATE AS DATE, 'succeeded' AS STATE FROM SUCCEEDED) AS A
@@ -133,4 +122,6 @@ SELECT STATE AS PERIOD_STATE, MIN(DATE) AS START_DATE, MAX(DATE) AS END_DATE
 FROM CTE
 GROUP BY DATE_SUB(DATE,INTERVAL SEQ DAY),STATE
 ORDER BY 2
+
+-- 
 

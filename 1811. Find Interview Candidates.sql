@@ -87,57 +87,59 @@ What if the first condition changed to be "any medal in n or more consecutive co
 Some users may not participate in every contest but still perform well in the ones they do. How would you change your solution to only consider contests where the user was a participant? Suppose the registered users for each contest are given in another table.
 
 
-["CONTEST_ID", "USER_ID", "NEXT_MEDAL_USER", "PREV_MEDAL_USER"], "values": [[190, 2, 5, null], [191, 5, 3, 2], [192, 3, 5, 5], [193, 5, 2, 3], [194, 2, 1, 5], [195, 1, 2, 2], [196, 2, null, 1], [190, 1, 2, null], [191, 2, 5, 1], [192, 5, 1, 2], [193, 1, 4, 5], [194, 4, 4, 1], [195, 4, 1, 4], [196, 1, null, 4], [190, 5, 3, null], [191, 3, 2, 5], [192, 2, 3, 3], [193, 3, 5, 2], [194, 5, 2, 3], [195, 2, 5, 5], [196, 5, null, 2]]}
-
+["NAME", "MAIL", "CURRENT_CONTEST", "NEXT_CONTEST", "PREV_CONTEST"], 
+["Alice", "alice@leetcode.com", 192, 193, 191], 
+["Alice", "alice@leetcode.com", 193, null, 192], 
+["Alice", "alice@leetcode.com", 191, 192, null], 
+["Bob", "bob@leetcode.com", 190, 191, null], 
+["Bob", "bob@leetcode.com", 191, 192, 190], 
+["Bob", "bob@leetcode.com", 192, 194, 191], 
+["Bob", "bob@leetcode.com", 194, 195, 192], 
+["Bob", "bob@leetcode.com", 195, 196, 194], 
+["Bob", "bob@leetcode.com", 196, null, 195], 
+["Hercy", "hercy@leetcode.com", 195, null, 194], 
+["Hercy", "hercy@leetcode.com", 194, 195, null], 
+["Quarz", "quarz@leetcode.com", 190, 191, null], 
+["Quarz", "quarz@leetcode.com", 191, 192, 190], 
+["Quarz", "quarz@leetcode.com", 192, 193, 191], 
+["Quarz", "quarz@leetcode.com", 193, 194, 192], 
+["Quarz", "quarz@leetcode.com", 194, 196, 193], 
+["Quarz", "quarz@leetcode.com", 196, null, 194], 
+["Sarah", "sarah@leetcode.com", 190, 193, null], 
+["Sarah", "sarah@leetcode.com", 193, 195, 190], ["Sarah", "...
 */
 
 -- METHOD 1 CONSIQUTIVE QUESTION 
-
-WITH ALL_MEDALS AS (
-    SELECT B.contest_id,A.MAIL,A.NAME FROM USERS A INNER JOIN (
-    SELECT contest_id, gold_medal AS user_id FROM Contests
-    UNION ALL
-    SELECT contest_id, silver_medal AS user_id FROM Contests
-    UNION ALL
-    SELECT contest_id, bronze_medal AS user_id FROM Contests) B
-    ON A.user_id=B.user_id 
+WITH ALL_USERS AS (
+SELECT CONTEST_ID, GOLD_MEDAL AS USER_ID
+FROM CONTESTS
+UNION ALL
+SELECT CONTEST_ID, SILVER_MEDAL AS USER_ID
+FROM CONTESTS
+UNION ALL
+SELECT CONTEST_ID, BRONZE_MEDAL AS USER_ID
+FROM CONTESTS
 ),
 
-GOLD AS (           
-SELECT gold_medal AS ID, NAME, MAIL
-FROM CONTESTS A
+THREE_MEDALS AS (
+    SELECT *, 
+    LEAD(CONTEST_ID) OVER(PARTITION BY USER_ID ORDER BY CONTEST_ID) AS NEXT_CONTEST_MEDAL,
+    LAG(CONTEST_ID) OVER(PARTITION BY USER_ID ORDER BY CONTEST_ID) AS PREVIOUS_CONTEST_MEDAL
+    FROM ALL_USERS
+),
+
+THREE_GOLD AS (
+    SELECT GOLD_MEDAL AS USR_ID FROM CONTESTS
+    GROUP BY 1
+    HAVING COUNT(DISTINCT CONTEST_ID)>=3
+),
+
+ALL_USES AS (
+SELECT USER_ID FROM THREE_MEDALS
+WHERE CONTEST_ID+1=NEXT_CONTEST_MEDAL AND CONTEST_ID-1=PREVIOUS_CONTEST_MEDAL
+UNION ALL
+SELECT USR_ID FROM THREE_GOLD) 
+
+SELECT DISTINCT B.MAIL, B.NAME FROM ALL_USES A
 INNER JOIN USERS B
-ON A.gold_medal = B.USER_ID
-GROUP BY gold_medal 
-HAVING COUNT(contest_id)>2),
-
-
-MEDAL as (
-    select NAME,MAIL,contest_id AS CURRENT_CONTEST, 
-    LEAD(CONTEST_ID,1) OVER(PARTITION BY NAME ORDER BY CONTEST_ID) AS NEXT_CONTEST,
-    LAG (CONTEST_ID,1) OVER(PARTITION BY NAME ORDER BY CONTEST_ID) AS PREV_CONTEST
-    FROM ALL_MEDALS
-    ORDER BY NAME
-)
-
-
-SELECT DISTINCT NAME,MAIL FROM MEDAL
-WHERE CURRENT_CONTEST=PREV_CONTEST+1 AND CURRENT_CONTEST=NEXT_CONTEST-1
-UNION 
-SELECT DISTINCT NAME,MAIL FROM GOLD
-
--- METHOD 2
-select u.name, u.mail
-from Contests c, Users u
-where u.user_id = c.gold_medal
-group by u.user_id
-having count(contest_id)>=3 
-
-union 
-
-select  u.name, u.mail
-from Users u , Contests c1 , Contests c2, Contests c3
-where u.user_id in  (c1.gold_medal, c1.silver_medal, c1.bronze_medal)
-      and u.user_id in  (c2.gold_medal, c2.silver_medal, c2.bronze_medal)
-      and u.user_id in  (c3.gold_medal, c3.silver_medal, c3.bronze_medal)
-      and c1.contest_id-1 = c2.contest_id and c2.contest_id-1 = c3.contest_id
+ON A.USER_ID=B.USER_ID

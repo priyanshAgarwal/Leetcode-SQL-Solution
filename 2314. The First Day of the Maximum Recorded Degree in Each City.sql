@@ -61,6 +61,14 @@ For city 1, the maximum degree was recorded on 2022-07-07 with 24 degrees.
 For city 1, the maximum degree was recorded on 2022-08-07 and 2022-08-17 with 37 degrees. We choose the earlier date (2022-08-07).
 For city 3, the maximum degree was recorded on 2022-12-07 with -6 degrees.
 
+["city_id", "day", "degree", "MAX_TEMP", "MIN_DAY"], 
+[1, "2022-01-07", -12, 24, "2022-01-07"], 
+[1, "2022-03-07", 5, 24, "2022-01-07"], 
+[1, "2022-07-07", 24, 24, "2022-01-07"], 
+[2, "2022-08-07", 37, 37, "2022-08-07"], 
+[2, "2022-08-17", 37, 37, "2022-08-07"], 
+[3, "2022-02-07", -7, -6, "2022-02-07"], 
+[3, "2022-12-07", -6, -6, "2022-02-07"]]}
 
 */
 # Write your MySQL query statement below
@@ -69,3 +77,4 @@ FROM
 (SELECT *, MAX(DEGREE) OVER(PARTITION BY city_id) AS MAX_TEMP FROM Weather) AS A
 WHERE MAX_TEMP=degree 
 GROUP BY 1
+
