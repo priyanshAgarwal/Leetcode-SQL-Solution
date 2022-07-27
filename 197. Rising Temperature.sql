@@ -38,6 +38,13 @@ Result table:
 | 2  |
 | 4  |
 +----+
+
+["ID", "TODAY_TEMP", "TODAY_DATE", "PREV_TEMP", "PREV_DATE"],
+[1, 10, "2015-01-01", null, null], 
+[2, 25, "2015-01-02", 10, "2015-01-01"], 
+[3, 20, "2015-01-03", 25, "2015-01-02"], 
+[4, 30, "2015-01-04", 20, "2015-01-03"]]}
+
 In 2015-01-02, temperature was higher than the previous day (10 -> 25).
 In 2015-01-04, temperature was higher than the previous day (20 -> 30).
 */

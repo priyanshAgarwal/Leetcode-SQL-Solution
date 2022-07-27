@@ -12,6 +12,24 @@ Write a query to get the percentage of users that have never liked or commented.
 
 */
 
+-- BASIC METHOD
+select round(count(distinct id)/(select count(distinct id) from users),2) as percent_never
+from users  
+where id not in 
+(select distinct user_id from events 
+where action in ('like', 'comment'))
+
+-- SMART SOLUTION 
+SELECT 
+ROUND(COUNT(DISTINCT CASE WHEN B.USER_ID IS NULL THEN A.ID END)*1.0/COUNT(DISTINCT A.ID),2) AS percent_never 
+FROM users  A
+LEFT JOIN (SELECT
+        USER_ID
+    FROM events
+    WHERE ACTION IN ('like', 'comment')
+    GROUP BY user_id) B
+ON A.ID=B.USER_ID 
+
 -- METHOD 1
 SELECT 
 ROUND(COUNT(DISTINCT CASE WHEN ACTION_TYPE=0 THEN ID END)*1.0/COUNT(DISTINCT ID),2) AS percent_never 
