@@ -34,6 +34,8 @@ Output:
 +-------------+
 |    285      |
 +-------------+
+
+
 Explanation:
 question 285 has answer rate 1/1, while question 369 has 0/1 answer rate, so output 285.
 

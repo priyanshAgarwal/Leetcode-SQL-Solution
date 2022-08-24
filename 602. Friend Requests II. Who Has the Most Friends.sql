@@ -60,14 +60,17 @@ Completely wrong logic and missed test case.
 
 -- Should have known the concept of Union All Here 
 
+# Write your MySQL query statement below
+
 WITH ids AS (
-SELECT requester_id AS id FROM request_accepted
+SELECT requester_id AS id,accepter_id AS FRIEND  FROM requestaccepted
 UNION ALL
-SELECT accepter_id AS id FROM request_accepted
+SELECT accepter_id AS id, requester_id AS FRIEND FROM requestaccepted
 )
-SELECT id, COUNT(id) AS num
+SELECT id, COUNT(DISTINCT FRIEND) AS num
 FROM ids
 GROUP BY id
 ORDER BY num DESC
 LIMIT 1
+
 

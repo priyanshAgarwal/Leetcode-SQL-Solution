@@ -21,6 +21,9 @@ Table: Vote
 | 4   |     2        |
 | 5   |     5        |
 +-----+--------------+
+
+SELECT * FROM 
+
 id is the auto-increment primary key,
 CandidateId is the id appeared in Candidate table.
 Write a sql to find the name of the winning candidate, the above example will return the winner B.
@@ -33,7 +36,8 @@ Write a sql to find the name of the winning candidate, the above example will re
 
 */
 
-SELECT NAME FROM (SELECT 
+SELECT NAME FROM (
+SELECT 
 A.NAME, DENSE_RANK() OVER(ORDER BY COUNT(B.ID) DESC) AS VOTE_RNK
 FROM CANDIDATE A
 LEFT JOIN VOTE B

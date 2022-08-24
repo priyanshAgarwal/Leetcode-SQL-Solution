@@ -14,6 +14,13 @@ The Employee table holds all employees including their managers. Every employee 
 |106   |Ron 	  |B 	      |101       |
 +------+----------+-----------+----------+
 
+SELECT B.ID, B.NAME FROM Employee A
+INNER JOIN Employee B 
+ON A.ManagerId=B.ID
+GROUP BY 1,2
+HAVING COUNT(*)>=5
+
+
 Given the Employee table, write a SQL query that finds out managers with at least 5 direct report. For the above table, your SQL query should return:
 
 +-------+

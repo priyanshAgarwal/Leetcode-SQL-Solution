@@ -18,3 +18,17 @@ from
     max(case when most_recent_rank=2 then position_name end) as second_recent
 from cte
 group by 1) as a
+
+-- Method 2
+with cte as 
+(select
+    user_id,
+    date(start_date) as start_date,
+    date(end_date) as end_date,
+    position_name as current_position,
+    lag(position_name,1) over(partition by user_id order by start_date) as previous_position
+from user_experiences)
+
+select 
+    count(distinct case when previous_position = 'Data Analyst' and current_position = 'Data Scientist' then user_id end)*1.0/count(distinct user_id) as percentage 
+from cte        
