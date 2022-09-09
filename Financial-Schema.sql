@@ -1,0 +1,86 @@
+
+CREATE TABLE GL_Account_Hierarchy_Level_3 (
+ACC_ID_L3 PRIMARY KEY,
+GL Account Name Level 3 VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE GL_Account_Hierarchy_Level_2 (
+ACC_ID_L2 PRIMARY KEY,
+GL Account Name Level 2 VARCHAR(100) NOT NULL
+FOREIGN KEY (ACC_ID_L3)
+);
+
+CREATE TABLE GL_Account_Hierarchy_Level_1 (
+ACC_ID_L1 PRIMARY KEY,
+GL Account Name Level 1 VARCHAR(100) NOT NULL
+FOREIGN KEY (ACC_ID_L2)
+);
+
+
+CREATE TABLE Account_Name (
+    ACC_ID PRIMARY KEY,
+    Account_code VARCHAR(100) NOT NULL
+    Account_name VARCHAR(100) NOT NULL
+    FOREIGN KEY (ACC_ID_L1)
+)
+
+
+CREATE TABLE Location_Hierarchy_Level_2 (
+LOC_ID_L2 PRIMARY KEY,
+LOCATION_Name_Level_2 VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Location_Hierarchy_Level_1 (
+LOC_ID_L1 PRIMARY KEY,
+LOCATION_Name_Level_1 VARCHAR(100) NOT NULL
+FOREIGN KEY (LOC_ID_L2)
+);
+
+CREATE TABLE Location_Name (
+    ACC_ID PRIMARY KEY,
+    Location_code VARCHAR(100) NOT NULL
+    Location_name VARCHAR(100) NOT NULL
+    FOREIGN KEY (LOC_ID_L1)
+)
+
+CREATE TABLE Department_Hierarchy_Level_2 (
+DEPT_ID_L2 PRIMARY KEY,
+Department_Name_Level_2 VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Department_Hierarchy_Level_1 (
+DEPT_ID_L1 PRIMARY KEY,
+Department_Name_Level_1 VARCHAR(100) NOT NULL
+FOREIGN KEY (DEPT_ID_L2)
+);
+
+CREATE TABLE Department_Security (
+DEPT_SEC_ID PRIMARY KEY,
+Department_Owner VARCHAR(100) NOT NULL
+Additional_Department_Owner_1 VARCHAR(100) NOT NULL
+Additional_Department_Owner_2 VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Department_Name (
+    DEPT_ID PRIMARY KEY,
+    Department_code VARCHAR(100) NOT NULL
+    Department_name VARCHAR(100) NOT NULL
+    FOREIGN KEY (DEPT_ID_L1)
+    FOREIGN KEY (DEPT_SEC_ID)
+)
+
+CREATE TABLE ACTUAL_SPEND (
+    SPEND_ID PRIMARY_KEY
+    AMOUNT_SPENT INT NOT NULL
+    DATE TIMESTAMP NOT NULL
+)
+
+CREATE TABLE Budget_Allocated (
+    Budget_ID PRIMARY KEY,
+    BUDGET_ALLOCATED INT NOT NULL
+    DATE TIMESTAMP NOT NULL
+    FOREIGN KEY (DEPT_ID)
+    FOREIGN KEY (LOC_ID)
+    FOREIGN KEY (ACC_ID)
+    FOREIGN KEY (SPEND_ID)
+)
