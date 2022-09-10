@@ -51,3 +51,9 @@ FROM FOLLOW A
 INNER JOIN FOLLOW B
 On A.follower=B.followee 
 GROUP BY B.followee
+
+-- Not efficient prone to error, You could make a mistake if you don't think about DISTINCT cases
+SELECT DISTINCT B.* FROM FOLLOW A 
+INNER JOIN (SELECT FOLLOWEE AS follower, COUNT(FOLLOWER) AS num FROM FOLLOW GROUP BY 1) AS B
+ON A.FOLLOWER=B.follower
+ORDER BY 1,2
