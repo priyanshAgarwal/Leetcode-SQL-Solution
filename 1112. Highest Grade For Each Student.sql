@@ -42,10 +42,23 @@ Result table:
 
 */
 
-SELECT student_id,course_id,grade FROM (SELECT 
-    student_id,
-    course_id,
-    grade, 
-    RANK() OVER(PARTITION BY student_id ORDER BY grade DESC, course_id ASC) AS Grade_Rank 
-    FROM Enrollments) A
-    WHERE A.Grade_Rank=1;
+SELECT 
+    student_id, 
+    course_id, 
+    grade
+FROM (SELECT *,
+    DENSE_RANK() OVER(PARTITION BY STUDENT_ID ORDER BY GRADE DESC, COURSE_ID ASC) AS RNK
+FROM ENROLLMENTS) AS A
+WHERE A.RNK=1
+
+-- ANOTHER WAY
+SELECT 
+    STUDENT_ID,
+    MIN(COURSE_ID) AS COURSE_ID,
+    GRADE
+FROM 
+(SELECT *,
+    MAX(GRADE) OVER(PARTITION BY STUDENT_ID) AS MAX_GRADE
+FROM ENROLLMENTS) AS A
+WHERE A.MAX_GRADE=A.GRADE
+GROUP BY STUDENT_ID 

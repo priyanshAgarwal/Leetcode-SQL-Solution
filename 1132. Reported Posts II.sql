@@ -69,6 +69,27 @@ The percentage for 2019-07-02 is 100% because one post was reported as spam and 
 The other days had no spam reports so the average is (50 + 100) / 2 = 75%
 Note that the output is only one number and that we do not care about the remove dates.
 
+
+SELECT *
+    FROM ACTIONS A
+LEFT JOIN REMOVALS B
+ON A.POST_ID=B.POST_ID AND  A.ACTION='report'
+
+Only benefit is case me condition nahi lagani padegi
+
+ ["user_id", "post_id", "action_date", "action", "extra", "post_id", "remove_date"], 
+ [2, 2, "2019-07-04", "view", null, null, null], 
+ [2, 2, "2019-07-04", "report", "spam", 2, "2019-07-20"], 
+ [3, 4, "2019-07-04", "view", null, null, null], 
+ [3, 4, "2019-07-04", "report", "spam", null, null], 
+ 
+
+["user_id", "post_id", "action_date", "action", "extra", "post_id", "remove_date"], 
+[2, 2, "2019-07-04", "view", null, 2, "2019-07-20"], 
+[2, 2, "2019-07-04", "report", "spam", 2, "2019-07-20"], 
+[3, 4, "2019-07-04", "view", null, null, null], 
+[3, 4, "2019-07-04", "report", "spam", null, null], 
+
 */
 
 --Didn't used distinct got wrong answer. Struggled very much with this answer.
