@@ -8,28 +8,27 @@ Please write a sql query to get the amount of each follower’s follower if he/s
 
 For example:
 
-+-------------+------------+
-| followee    | follower   |
-+-------------+------------+
-|     A       |     B      |
-|     B       |     C      |
-|     B       |     D      |
-|     D       |     E      |
-+-------------+------------+
-should output:
-+-------------+------------+
-| follower    | num        |
-+-------------+------------+
-|     B       |  2         |
-|     D       |  1         |
-+-------------+------------+
-
-
-
-Explaination:
-Both B and D exist in the follower list, when as a followee, B's follower is C and D, 
-and D's follower is E. A does not exist in follower list.
- 
+Input: 
+Follow table:
++----------+----------+
+| followee | follower |
++----------+----------+
+| Alice    | Bob      |
+| Bob      | Cena     |
+| Bob      | Donald   |
+| Donald   | Edward   |
++----------+----------+
+Output: 
++----------+-----+
+| follower | num |
++----------+-----+
+| Bob      | 2   |
+| Donald   | 1   |
++----------+-----+
+Explanation: 
+User Bob has 2 followers. Bob is a second-degree follower because he follows Alice, so we include him in the result table.
+User Donald has 1 follower. Donald is a second-degree follower because he follows Bob, so we include him in the result table.
+User Alice has 1 follower. Alice is not a second-degree follower because she does not follow anyone, so we don not include her in the result table.
 
 Note:
 Followee would not follow himself/herself in all cases.
@@ -53,6 +52,7 @@ On A.follower=B.followee
 GROUP BY B.followee
 
 -- Not efficient prone to error, You could make a mistake if you don't think about DISTINCT cases
+-- 
 SELECT DISTINCT B.* FROM FOLLOW A 
 INNER JOIN (SELECT FOLLOWEE AS follower, COUNT(FOLLOWER) AS num FROM FOLLOW GROUP BY 1) AS B
 ON A.FOLLOWER=B.follower
