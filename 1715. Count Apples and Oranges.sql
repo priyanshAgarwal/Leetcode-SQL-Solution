@@ -93,11 +93,11 @@ FROM BOX_WITH_CEST A
 RIGHT JOIN Boxes B
 ON A.box_id =B.box_id 
 
---Must Have Used Shaorter Approach
+--Must Have Used Shorter Approach
 
 SELECT 
-    SUM(A.APPLE_COUNT+IFNULL(B.APPLE_COUNT,0)) AS apple_count, 
-    SUM(A.ORANGE_COUNT+IFNULL(B.ORANGE_COUNT,0)) AS orange_count
-FROM Boxes A
-LEFT JOIN Chests  B
-ON A.chest_id =B.chest_id 
+    SUM(COALESCE(A.APPLE_COUNT,0)+COALESCE(B.APPLE_COUNT,0)) AS apple_count,
+    SUM(COALESCE(A.ORANGE_COUNT,0)+COALESCE(B.ORANGE_COUNT,0)) AS orange_count
+FROM BOXES A
+LEFT JOIN CHESTS B
+ON A.CHEST_ID=B.CHEST_ID
