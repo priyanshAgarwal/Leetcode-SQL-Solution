@@ -100,7 +100,7 @@ The hard disk was never ordered and we don't include it in the result table.
 SELECT product_name, product_id, order_id, order_date
 FROM (
     SELECT product_name, P.product_id, order_id, order_date,
-    RANK() OVER (PARTITION BY product_name ORDER BY order_date DESC) rnk
+    DENSE_RANK() OVER (PARTITION BY product_name ORDER BY order_date DESC) rnk
     FROM Orders O
     JOIN Products P
     On O.product_id = P.product_id
