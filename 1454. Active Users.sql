@@ -83,8 +83,18 @@ Longest Streak
 [7, "Jonathan", "2020-06-10", 1]]}
 */
 
--- Smart Way Use Lag (Remeber to first get distinct values)
+-- Short Method
+SELECT DISTINCT B.* 
+FROM (SELECT DISTINCT *, DATE_ADD(LOGIN_DATE, INTERVAL - DENSE_RANK() OVER(PARTITION BY ID ORDER BY LOGIN_DATE) DAY) AS GROUP_NUM
+FROM LOGINS) AS A
+INNER JOIN ACCOUNTS B
+ON A.ID=B.ID
+GROUP BY A.ID, A.GROUP_NUM
+HAVING COUNT(*)>=5
+ORDER BY 1
 
+
+-- Smart Way Use Lag (Remeber to first get distinct values)
 WITH CTE AS (
     SELECT DISTINCT ID, LOGIN_DATE FROM LOGINS ),
     

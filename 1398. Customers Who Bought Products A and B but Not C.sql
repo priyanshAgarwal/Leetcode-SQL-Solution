@@ -74,25 +74,24 @@ Only the customer_id with id 3 bought the product A and B but not the product C.
 
 -- Method 1
 
-select customer_id, product_name  
-from Orders 
-where customer_id in
-(
-    select customer_id
-    from Orders
-    where product_name='A'
-) and customer_id in
-(
-    select customer_id
-    from Orders
-    where product_name='B'
-) and customer_id not in
-(
-    select customer_id
-    from Orders
-    where product_name='C'
-) 
+WITH CTE AS (
+SELECT 
+    A.CUSTOMER_ID,
+    B.CUSTOMER_NAME,
+    COUNT(DISTINCT CASE WHEN PRODUCT_NAME='A' THEN ORDER_ID END) AS PRODUCT_A,
+    COUNT(DISTINCT CASE WHEN PRODUCT_NAME='B' THEN ORDER_ID END) AS PRODUCT_B,
+    COUNT(DISTINCT CASE WHEN PRODUCT_NAME='C' THEN ORDER_ID END) AS PRODUCT_C
+FROM ORDERS A
+INNER JOIN CUSTOMERS B
+ON A.CUSTOMER_ID = B.CUSTOMER_ID
+GROUP BY 1
+)
 
+SELECT     
+    CUSTOMER_ID,
+    CUSTOMER_NAME
+FROM CTE
+WHERE PRODUCT_A>0 AND PRODUCT_B>0 AND PRODUCT_C=0
 
 -- Method 2
 -- SUM KE ANDAR BHI CONDITION DAL SAKTE HAI
