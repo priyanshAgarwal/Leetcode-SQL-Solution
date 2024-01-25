@@ -44,7 +44,11 @@ SELECT ISNULL( (SELECT SALARY FROM
 WHERE SR.SAL_RANK=2) ,NULL) AS SecondHighestSalary ;
 
 
--- If Data can't find the second highest then NUll would be returned for NULL
+-- If Data can't find the second highest then NUll would be returned for NULL, Let's say if multiple ROW are returned then MAX function can help with bringing out to single value.
+-- MAX returns NULL when there is no row to select.
+
+
+  
 SELECT MAX(SALARY) AS SecondHighestSalary 
 FROM (SELECT SALARY, DENSE_RANK() OVER(ORDER BY SALARY DESC) AS SAL_RANK
 FROM EMPLOYEE) AS A
