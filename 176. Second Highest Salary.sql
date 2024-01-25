@@ -16,6 +16,29 @@ Write a SQL query to get the second highest salary from the Employee table.
 -- Use of Rank, Query took 854ms, Remember ISNULL is important in case there is no Data.
 -- Dense Rank is much more usefull here, because Dense Rank won't skip the number. 
 
+/*
+Why RANK() won't work 
+
+| id | salary | Sal_Rank |
+| -- | ------ | -------- |
+| 1  | 100    |    1     |
+| 2  | 100    |    1     |
+| 3  | 50     |    3     |
+
+So you are missing rank number 2 even thought it is there. 
+
+ROW_NUMBER()
+
+| id | salary | Sal_Rank |
+| -- | ------ | -------- |
+| 1  | 100    |    1     |
+| 2  | 100    |    2     |
+| 3  | 50     |    3     |
+
+Your Second Highest becomes third highest 
+
+*/
+
 SELECT ISNULL( (SELECT SALARY FROM 
 (SELECT  DISTINCT SALARY, DENSE_RANK() OVER(ORDER BY SALARY DESC) AS SAL_RANK from Employee) AS SR 
 WHERE SR.SAL_RANK=2) ,NULL) AS SecondHighestSalary ;
