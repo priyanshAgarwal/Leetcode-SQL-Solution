@@ -71,6 +71,64 @@ Output:
 | Max       |
 +-----------+
 
+Lets Learn from different joins
+
+SELECT * FROM CUSTOMERS A
+INNER JOIN ORDERS B
+ON A.ID = B.CUSTOMERID WHERE B.CUSTOMERID IS NULL
+
+| id | name | id | customerId |
+| -- | ---- | -- | ---------- |
+
+Because after joining there are no customerID that are NULL (Remember order of operations)
+
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+
+
+SELECT * FROM CUSTOMERS A
+LEFT JOIN ORDERS B
+ON A.ID = B.CUSTOMERID AND B.CUSTOMERID IS NULL
+
+| id | name  | id   | customerId |
+| -- | ----- | ---- | ---------- |
+| 1  | Joe   | null | null       |
+| 2  | Henry | null | null       |
+| 3  | Sam   | null | null       |
+| 4  | Max   | null | null       |
+
+
+You get everything from Left table and ther are no null customer id so everything from left table is null
+
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+
+Final Answer 
+
+SELECT * FROM CUSTOMERS A
+LEFT JOIN ORDERS B
+ON A.ID = B.CUSTOMERID 
+
+| id | name  | id   | customerId |
+| -- | ----- | ---- | ---------- |
+| 1  | Joe   | 2    | 1          |
+| 2  | Henry | null | null       |
+| 3  | Sam   | 1    | 3          |
+| 4  | Max   | null | null       |
+
+We get everything from right table, but only values that were present from left, which we can filter using where clause.  
+
+
+SELECT * FROM CUSTOMERS A
+LEFT JOIN ORDERS B
+ON A.ID = B.CUSTOMERID 
+WHERE B.CUSTOMERID IS NULL
+
+| id | name  | id   | customerId |
+| -- | ----- | ---- | ---------- |
+| 2  | Henry | null | null       |
+| 4  | Max   | null | null       |
+
+So According to order of operations, when we apply the join condition, So don't think where clause from left table in left join becomes inner join 
+
 */
 
 SELECT NAME AS Customers 
