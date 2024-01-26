@@ -57,9 +57,15 @@ ON A.recordDate=date_add(B.recordDate, interval 1 day)
 AND A.Temperature > B.Temperature 
 
 --Method 2 (Windows Function)
-select id from
-(select id, Temperature t1, 
-    lag(Temperature,1) over(order by RecordDate) t2, 
-    RecordDate d1 , 
-    lag(RecordDate,1) over(order by RecordDate) as d2 from Weather) a
-where a.t1 > a.t2 and (d1-d2)=1
+WITH CTE AS (
+SELECT 
+    ID,
+    RECORDDATE,
+    TEMPERATURE,
+    LAG(TEMPERATURE,1) OVER(ORDER BY RECORDDATE) AS PREVIOUS_TEMP,
+    LAG(RECORDDATE,1) OVER(ORDER BY RECORDDATE) AS PREVIOUS_DATE,
+    TEMPERATURE - LAG(TEMPERATURE,1) OVER(ORDER BY RECORDDATE)  AS TEMP_RISE
+FROM WEATHER)
+
+SELECT ID FROM CTE 
+WHERE TEMP_RISE>0 AND RECORDDATE=DATE_ADD(PREVIOUS_DATE, INTERVAL 1 DAY)
