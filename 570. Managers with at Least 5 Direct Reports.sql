@@ -36,23 +36,30 @@ Given the Employee table, write a SQL query that finds out managers with at leas
 [101, "John", "A", null, 105, "Anne", "A", 101], 
 [101, "John", "A", null, 106, "Ron", "B", 101]]}
 
-SELECT * FROM
-EMPLOYEE A INNER JOIN EMPLOYEE B
-ON A.ID=B.MANAGERID
+SELECT * FROM EMPLOYEE A
+INNER JOIN EMPLOYEE B
+ON A.MANAGERID = B.ID
+
+
+| id  | name  | department | managerId | id   | name | department | managerId |
+| --- | ----- | ---------- | --------- | ---- | ---- | ---------- | --------- |
+| 101 | John  | A          | null      | null | null | null       | null      |
+| 102 | Dan   | A          | 101       | 101  | John | A          | null      |
+| 103 | James | A          | 101       | 101  | John | A          | null      |
+| 104 | Amy   | A          | 101       | 101  | John | A          | null      |
+| 105 | Anne  | A          | 101       | 101  | John | A          | null      |
+| 106 | Ron   | B          | 101       | 101  | John | A          | null      |
+
+Now we can simply group by managerId
 
 */
---SELF JOIN 
-SELECT A.NAME FROM
-EMPLOYEE A INNER JOIN EMPLOYEE B
-ON A.ID=B.MANAGERID
-GROUP BY B.MANAGERID
-HAVING COUNT(B.ID)>4
+--SELF JOIN
 
-SELECT B.NAME FROM EMPLOYEE A 
+SELECT B.NAME FROM EMPLOYEE A
 INNER JOIN EMPLOYEE B
-ON A.MANAGERID=B.ID
-GROUP BY 1
-HAVING COUNT(DISTINCT A.ID)>4
+ON A.MANAGERID = B.ID
+GROUP BY A.MANAGERID
+HAVING COUNT(DISTINCT A.ID)>=5
 
 --SINGLE QUERY 
 
@@ -63,11 +70,11 @@ GROUP BY ManagerID
 HAVING COUNT(ManagerID)>=5); 
 
 --METHOD 1
-with get_manager AS (
-SELECT ManagerID
-FROM Employee
-GROUP BY ManagerID
-HAVING COUNT(ManagerID)>=5)
-
-SELECT Name FROM Employee 
-WHERE Id IN (SELECT DISTINCT ManagerID FROM get_manager); 
+SELECT A.NAME
+FROM EMPLOYEE A 
+INNER JOIN 
+(SELECT MANAGERID AS ID
+FROM EMPLOYEE
+GROUP BY MANAGERID
+HAVING  COUNT(DISTINCT ID)>=5) AS B
+ON A.ID = B.ID
