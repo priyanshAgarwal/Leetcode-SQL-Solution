@@ -60,10 +60,36 @@ High Salary: Accounts 3, 6, and 8.
 
 */
 
--- Very Important but wierd concept
+
+-- That's how you unpiviot yhe table
+
+WITH CTE AS (
+SELECT 
+COUNT(DISTINCT CASE WHEN INCOME<20000 THEN ACCOUNT_ID ELSE NULL END) AS Low_Salary,
+COUNT(DISTINCT CASE WHEN INCOME BETWEEN 20000 AND 50000 THEN ACCOUNT_ID ELSE NULL END) AS Average_Salary,
+COUNT(DISTINCT CASE WHEN INCOME>50000 THEN ACCOUNT_ID ELSE NULL END) AS High_Salary
+FROM ACCOUNTS)
+
+
+SELECT 'High Salary' AS CATEGORY, (SELECT SUM(High_Salary) FROM CTE) AS accounts_count 
+UNION ALL
+SELECT 'Average Salary' AS CATEGORY, (SELECT SUM(Average_Salary) FROM CTE) AS accounts_count 
+UNION ALL
+SELECT 'Low Salary' AS CATEGORY, (SELECT SUM(Low_Salary) FROM CTE) AS accounts_count 
+
+
+
+-- Very Important but wierd concept. You don't want to miss 
 
 SELECT 'Low Salary' AS Category, COUNT( CASE WHEN income <20000 THEN ACCOUNT_ID ELSE NULL END) AS accounts_count FROM Accounts
 UNION ALL
 SELECT 'Average Salary' AS Category, COUNT(CASE WHEN income BETWEEN 20000 AND 50000 THEN ACCOUNT_ID ELSE NULL END) AS accounts_count FROM Accounts
 UNION ALL
 SELECT 'High Salary' AS Category, COUNT(CASE WHEN INCOME>50000 THEN ACCOUNT_ID ELSE NULL END) AS accounts_count FROM Accounts;
+
+
+SELECT 'High Salary' as category
+UNION ALL
+SELECT 'Average Salary' as category
+UNION ALL
+SELECT 'Low Salary' as category
