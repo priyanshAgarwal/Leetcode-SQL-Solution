@@ -79,7 +79,7 @@ SELECT 'Low Salary' AS CATEGORY, (SELECT SUM(Low_Salary) FROM CTE) AS accounts_c
 
 
 
--- Very Important but wierd concept. You don't want to miss 
+-- Very Important but wierd concept of unpivioting table, You don't want to miss 
 
 SELECT 'Low Salary' AS Category, COUNT( CASE WHEN income <20000 THEN ACCOUNT_ID ELSE NULL END) AS accounts_count FROM Accounts
 UNION ALL

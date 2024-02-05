@@ -56,16 +56,15 @@ Hence, half the customers have immediate first orders.
 
 */
 
-WITH FIRST_ORDER AS (
-    select *,
-    DENSE_RANK() OVER(PARTITION BY CUSTOMER_ID ORDER BY ORDER_DATE) AS ORDER_NUMBER,
-    CASE WHEN order_date = customer_pref_delivery_date THEN 'immediate' ELSE 'scheduled' END AS ORDER_TYPE
-FROM Delivery)
+WITH CTE AS ( 
+SELECT *,
+    DENSE_RANK() OVER(PARTITION BY CUSTOMER_ID ORDER BY ORDER_DATE) AS ORDER_RANK,
+    CASE WHEN order_date=customer_pref_delivery_date THEN 1 ELSE 0 END AS ORDER_TYPE
+FROM DELIVERY)
 
 
-SELECT ROUND(COUNT(DISTINCT CASE WHEN ORDER_TYPE='immediate' THEN delivery_id ELSE NULL END)*100.0/COUNT(DISTINCT delivery_id),2) AS immediate_percentage  
-FROM FIRST_ORDER
-WHERE ORDER_NUMBER=1
+SELECT ROUND(COUNT(DISTINCT CASE WHEN ORDER_RANK=1 AND ORDER_TYPE=1 THEN customer_id ELSE NULL END)*100.0/COUNT(DISTINCT CUSTOMER_ID),2) AS immediate_percentage 
+ FROM CTE
 
 
 -- Keep in mind you can use group by using * 
