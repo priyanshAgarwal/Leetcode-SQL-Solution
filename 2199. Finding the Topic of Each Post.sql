@@ -103,3 +103,21 @@ FROM POSTS A
 LEFT JOIN KEYWORDS B
 ON content REGEXP CONCAT('\\b',word,'\\b') 
 GROUP BY post_id
+
+-- Method 2
+WITH cte AS (
+  SELECT *
+  FROM Posts p
+  LEFT JOIN Keywords k
+  ON LOCATE(CONCAT(' ', word, ' '), CONCAT(' ', content, ' ')) > 0
+-- Need to add space in content as well because what if 'handball' ia at the end but your word is ' handball ', so need that as well 
+)
+
+
+
+SELECT 
+    post_id,
+    COALESCE(GROUP_CONCAT(DISTINCT topic_id),'Ambiguous!') AS topic      
+FROM cte
+GROUP BY 1
+ORDER BY topic

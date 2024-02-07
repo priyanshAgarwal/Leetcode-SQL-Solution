@@ -90,26 +90,21 @@ AND Driver_Id  NOT IN (SELECT DISTINCT USERS_ID FROM USERS WHERE BANNED = 'YES')
 AND Request_at between '2013-10-01' and '2013-10-03'
 GROUP BY 1;
 
--- Method 2
-WITH TRIPS_1 AS (
-SELECT * FROM TRIPS 
-WHERE Client_Id NOT IN (SELECT Users_Id FROM USERS WHERE BANNED='Yes' AND ROLE='client' )
-AND DRIVER_ID NOT IN (SELECT Users_Id FROM USERS WHERE BANNED='Yes' AND ROLE='driver' )
-AND Request_at between '2013-10-01' and '2013-10-03' 
-),
+-- Method 2 (Best method we are not usinig not in here which can be expensive)
+# Write your MySQL query statement below
+WITH CTE AS (
+SELECT A.* FROM TRIPS A
+LEFT JOIN USERS B
+ON A.CLIENT_ID = B.users_id and b.role='client'
+LEFT JOIN USERS C
+ON A.driver_id = C.users_id and c.role='driver'
+WHERE B.BANNED = 'No' AND C.BANNED = 'No')
 
-TRIP_COUNT AS(
-SELECT 
-    Request_at,
-    SUM(CASE WHEN LEFT(STATUS,9)='cancelled' THEN 1 ELSE 0 END) AS CANCELLED_COUNT,
-    COUNT(*) AS TOTAL_COUNT
-FROM TRIPS_1
-GROUP BY Request_at)
+SELECT request_at AS DAY, ROUND(COUNT(DISTINCT CASE WHEN LEFT(STATUS,9)='cancelled' THEN ID ELSE NULL END)*1.00/COUNT(DISTINCT ID),2) AS "Cancellation Rate"
+FROM CTE
+WHERE REQUEST_AT BETWEEN "2013-10-01" AND "2013-10-03"
+GROUP BY 1
 
-SELECT 
-    Request_at AS DAY,
-    ROUND((CANCELLED_COUNT/TOTAL_COUNT),2) AS 'Cancellation Rate'
-FROM TRIP_COUNT
 
 
 -- Method 3
