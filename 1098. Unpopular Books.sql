@@ -86,8 +86,18 @@ where available_from < '2019-05-23'
 and (book_sold is null or book_sold <10)
 order by b.book_id;
 
--- # Write your MySQL query statement below
+/*
+What not to do, lets say 
+-- AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-23'
+WHERE A.available_from<DATE_SUB('2019-06-23',INTERVAL 1 MONTH)
+AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-23'
+ 
+You used AND after where, then you are also fintering the book where dispatch date wasn't in between those dates, even though we want those books, so we use AND in the join condition so we get the books and we also get the number of books sold as 0
 
+*/
+
+
+-- # Write your MySQL query statement below
 SELECT BOOK_ID,NAME FROM (SELECT 
     A.BOOK_ID,
     A.NAME,
@@ -100,3 +110,14 @@ AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-
 WHERE AVAILABLE_FROM < DATE_ADD('2019-06-23', INTERVAL -30 DAY)
 GROUP BY 1,2) AS A
 WHERE A.QUANTITY_SOLD<10
+
+
+-- Much more shorter one query
+SELECT A.BOOK_ID AS book_id, A.NAME AS name
+FROM BOOKS A
+LEFT JOIN ORDERS B
+ON A.BOOK_ID=B.BOOK_ID 
+AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-23'
+WHERE A.available_from<DATE_SUB('2019-06-23',INTERVAL 1 MONTH)
+GROUP BY 1,2
+HAVING COALESCE(SUM(QUANTITY),0)<10

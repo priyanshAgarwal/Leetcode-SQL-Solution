@@ -51,6 +51,9 @@ Note that we only care about dates with non zero user count.
 The user with id 5 first logged in on 2019-03-01 so he's not counted on 2019-06-21.
 */
 
+-- Also thik that a user can login and logout multiple times on same day, your dense_rank logic will fail, try to use normal function whereever possible
+
+
 
 WITH CTE AS (
 SELECT user_id, MIN(activity_date) AS FIRST_LOGIN
