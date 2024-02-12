@@ -60,6 +60,29 @@ Product 2 was ordered one time in 2022. We do not include it in the answer.
 
 */
 
+
+-- Using Windows function little long but using Rolling count
+
+with cte2 as (
+select *,YEAR(purchase_date) as year, count(order_id) over(partition by product_id, YEAR(purchase_date) order by YEAR(purchase_date) range between 1 preceding and current row) as sold_products
+ from orders),
+
+cte3 as (
+select 
+    product_id, 
+    year as this_year,
+    lag(year) over(partition by product_id order by year) as last_year,
+    sold_products as this_year_products,
+    lag(sold_products) over(partition by product_id order by year) as last_year_products
+from cte2)
+
+select distinct product_id 
+from cte3
+where this_year_products >=3 and last_year_products >=3 and this_year-last_year=1
+
+
+
+
 WITH CTE AS (
 SELECT 
     YEAR(PURCHASE_DATE) AS CURRENT_YEAR,
