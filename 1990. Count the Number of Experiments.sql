@@ -90,9 +90,10 @@ enum_platforms AS (
     SELECT 'Web' platform
 )
 
-SELECT A.*, COUNT(experiment_id) AS num_experiments 
-FROM (SELECT * FROM enum_experiments, enum_platforms) A
-LEFT JOIN Experiments B
-ON A.PLATFORM=B.PLATFORM AND A.EXPERIMENT_NAME=B.EXPERIMENT_NAME
-GROUP BY A.PLATFORM, A.EXPERIMENT_NAME
-ORDER BY 1,3 DESC;
+select 
+    a.platform, b.experiment_name , count(experiment_id ) as num_experiments 
+from platform a 
+cross join experiment_name  b
+left join Experiments c
+on a.platform = c.platform  and b.experiment_name =c.experiment_name 
+group by 1,2
