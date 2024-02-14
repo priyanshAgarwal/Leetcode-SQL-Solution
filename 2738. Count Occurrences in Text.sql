@@ -63,3 +63,11 @@ SELECT 'bull' as word, sum(bull) as count  from cte
 union all
 SELECT 'bear' as word, sum(bear) as count  from cte
 
+-- Pandas Code
+
+import pandas as pd
+
+def count_occurrences(files: pd.DataFrame) -> pd.DataFrame:
+    count_bull = files['content'].str.contains(' bull ').sum()
+    count_bear = files['content'].str.contains(' bear ').sum()
+    return pd.DataFrame({'word':['bull','bear'], 'count':[count_bull,count_bear]})
