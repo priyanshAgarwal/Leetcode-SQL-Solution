@@ -27,8 +27,8 @@ ORDER BY 1,2,3
 [1, 2, 30], 20+30=50
 [1, 3, 40], 20+30+40=90
 [1, 4, 60], 30+40+60=130
-[1, 5,  0] (Not included in the data)
-[1, 6,  0] (Not included in the data)
+[1, 5,  0] (**Not included in the data**)
+[1, 6,  0] (**Not included in the data**)
 [1, 7, 90], ROWS Code 40+60+90=190  RANGE Code 90+0+0=90
 [1, 8, 90], ROWS Code 90+90+60=240  RANGE Code 90+90+0=180
 
