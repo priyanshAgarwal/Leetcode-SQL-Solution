@@ -80,6 +80,18 @@ Explanation: Users 4 and 9 did not stream in 2021.
 User 11 did not subscribe in 2021.
 
 
+Remember about the join condition, so if you don't use AND B.account_id IS NULL then it will give you all the 
+account with year 2021.. Now when you use the where clause only those account are shown where they didn't stream. 
+
+| account_id | start_date | end_date   | session_id | account_id | stream_date |
+| ---------- | ---------- | ---------- | ---------- | ---------- | ----------- |
+| 9          | 2020-02-18 | 2021-10-30 | null       | null       | null        |
+| 3          | 2021-09-21 | 2021-11-13 | 16         | 3          | 2021-10-27  |
+| 13         | 2021-04-20 | 2021-09-22 | 17         | 13         | 2021-08-08  |
+| 4          | 2020-10-26 | 2021-05-08 | null       | null       | null        |
+| 5          | 2020-09-11 | 2021-01-17 | 13         | 5          | 2021-01-05  |
+
+
 */
 
 SELECT COUNT(DISTINCT A.account_id) AS accounts_count 
