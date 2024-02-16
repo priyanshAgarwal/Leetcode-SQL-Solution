@@ -2,11 +2,6 @@
 
 2066. Account Balance
 Medium
-
-7
-
-0
-
 Add to List
 
 Share
