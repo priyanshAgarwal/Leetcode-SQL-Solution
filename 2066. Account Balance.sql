@@ -71,9 +71,14 @@ Account 2:
 */
 
 -- Method 1
-SELECT ACCOUNT_ID,DAY, 
-    SUM(CASE WHEN TYPE='Withdraw' THEN -1*AMOUNT ELSE AMOUNT END) OVER(PARTITION BY ACCOUNT_ID ORDER BY DAY) AS BALANCE
-FROM Transactions 
+SELECT account_id, day,
+
+SUM(CASE 
+    WHEN type='Deposit' THEN amount 
+    WHEN type='Withdraw' THEN -1*amount
+    ELSE NULL 
+    END) OVER(PARTITION BY ACCOUNT_ID ORDER BY DAY) AS BALANCE
+ FROM TRANSACTIONS
 
 
 -- Method 2
