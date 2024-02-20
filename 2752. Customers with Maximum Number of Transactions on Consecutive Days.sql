@@ -78,3 +78,15 @@ GROUP BY 1,2)
 SELECT customer_id FROM CTE_2
 WHERE TOP_RANK=1
 ORDER BY 1
+
+-- Pandas Code
+import pandas as pd
+
+def find_customers(transactions: pd.DataFrame) -> pd.DataFrame:
+    df = transactions.sort_values(by=['customer_id', 'transaction_date'])
+    df['row_num'] = df.groupby('customer_id')['transaction_date'].rank()
+    df['date_group']= df['transaction_date'] - pd.to_timedelta(df['row_num'], unit='d')
+    df=df.groupby(['customer_id','date_group'])['transaction_id'].nunique().reset_index().rename(columns=   {'transaction_id':'transaction_cnt'}) 
+    max_num = df['transaction_cnt'].max()
+
+    return df[df['transaction_cnt']==max_num][['customer_id']].sort_values(by='customer_id', ascending=True).drop_duplicates()
