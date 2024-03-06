@@ -109,21 +109,24 @@ ON A.ID=B.ID
 WHERE DATEDIFF(FIFT_LOGIN,LOGIN_DATE)=4
 ORDER BY 1
 
--- Method 2 (Gap and Island)
+-- Method 2 (Using range between interval 4 day preceding)
 WITH CTE AS (
-SELECT DISTINCT ID, 
-LOGIN_DATE,
-DENSE_RANK() OVER(PARTITION BY ID ORDER BY LOGIN_DATE) AS ROW_NUM     
-FROM LOGINS),
+SELECT 
+    ID, LOGIN_DATE
+FROM LOGINS
+GROUP BY 1,2),
 
 CTE_2 AS (
-    SELECT ID,LOGIN_DATE, DATE_ADD(LOGIN_DATE, INTERVAL -ROW_NUM DAY) AS DATE_GROUP FROM CTE
-)
+SELECT *, count(LOGIN_DATE) OVER(PARTITION BY ID ORDER BY LOGIN_DATE range between interval 4 day preceding and current row) AS count_login 
+FROM CTE) 
 
-SELECT * FROM ACCOUNTS WHERE ID IN ( SELECT ID FROM CTE_2
-GROUP BY ID,DATE_GROUP
-HAVING  COUNT(*)>=5)
-ORDER BY 1
+select b.* from CTE_2 a
+INNER JOIN ACCOUNTS B
+ON A.ID=B.ID
+where a.count_login >= 5
+order by 1;
+
+
 
 -- Method 3 (Gap and Island)
 WITH CTE AS (

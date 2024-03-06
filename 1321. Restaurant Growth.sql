@@ -112,3 +112,15 @@ FROM CTE)
 
 SELECT VISITED_ON,AMOUNT,ROUND(AVG_AMOUNT,2) AS average_amount  FROM CTE2
 WHERE ROW_NUM>6
+
+
+-- Alternative, This would also work, if you don't use the AVG function, problem is when you use AVG function to count the rows. 
+ 
+SELECT DISTINCT
+    visited_on,
+    SUM(amount) OVER(ORDER BY visited_on RANGE BETWEEN INTERVAL 6 DAY PRECEDING AND CURRENT ROW) AS amount,
+    ROUND(SUM(amount) OVER(ORDER BY visited_on RANGE BETWEEN INTERVAL 6 DAY PRECEDING AND CURRENT ROW) / 7, 2) AS average_amount
+FROM
+    Customer
+LIMIT 1000000
+OFFSET 6
