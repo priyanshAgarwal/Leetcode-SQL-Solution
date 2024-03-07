@@ -126,6 +126,25 @@ ON A.ID=B.ID
 where a.count_login >= 5
 order by 1;
 
+-- This isn't faster though its self join method which you need to understand
+/*
+Logic is for each id and each date there should be 4 dates if there are consiqutive dates, 
+because if there are consiqutive dates each date is tied to four other dates in case of 5 day continution, that's we group by A.id and A.login_date
+
+*/
+with cte as (
+select a.id,a.login_date, count(distinct b.login_date) as date_count
+from Logins a
+inner join Logins b 
+on a.id = b.id
+where datediff(b.login_date,a.login_date) between 1 and 4
+group by 1,2)
+
+SELECT DISTINCT Accounts.id, name
+FROM cte
+JOIN Accounts ON cte.id = Accounts.id
+where date_count>=4
+ORDER BY 1;
 
 
 -- Method 3 (Gap and Island)
