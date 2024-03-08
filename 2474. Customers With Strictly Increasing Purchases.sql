@@ -124,3 +124,140 @@ select customer_id
 from cte
 group by 1
 having count(distinct rank_diff)=1
+
+-- Method 3 (Couldn't think of this logic as well)
+
+with orders as (
+    select
+    customer_id,
+    year(order_date) as order_year,
+    sum(price) as price
+    from orders
+    group by 1,2
+    order by 1,2
+),
+
+orders2 as (
+    select *,
+    -- # Compare current order year to the next order year
+    lead(order_year,1,order_year) over(partition by customer_id order by order_year) as next_year, 
+    lead(order_year,1,order_year) over(partition by customer_id order by order_year) - order_year as diff_year,
+    -- # Compared current year's total price to next year's price; Add 1 to next year's price to account for the last year when there is no more future years to compare to so that the results will not return 0.
+    lead(price,1, price+1) over (partition by customer_id order by order_year) as next_price,
+    lead(price,1, price+1) over (partition by customer_id order by order_year) - price as diff_price
+    from orders
+)
+
+select distinct
+customer_id
+from orders2
+# Exclude customers that do not meet the criteria
+where customer_id not in (
+select customer_id from orders2
+where diff_price<=0 or diff_year>1)
+
+
+
+/*
+Why won't simple self join work with the conditins
+
+select * 
+from cte a 
+inner join cte b
+on a.customer_id=b.customer_id and a.years + 1 = b.years and b.total_price>a.total_price
+
+| customer_id | years | total_price |
+| ----------- | ----- | ----------- |
+| 6           | 2019  | 15000       |
+| 6           | 2020  | 5600        |
+| 6           | 2021  | 6700        |
+| 6           | 2022  | 2100        |
+
+
+so first or last row can have price greater or less than previous valu and still that would be considerred, in other cases it might work but in this edge case it won't work
+*/
+
+
+WITH RANKED AS (
+    SELECT customer_id,
+            order_year,
+            RANK() OVER(PARTITION BY customer_id ORDER BY order_year) as r1,
+            RANK() OVER(PARTITION BY customer_id ORDER BY total) as r2
+    FROM (
+        SELECT customer_id, YEAR(order_date) AS order_year, SUM(price) AS total
+        FROM Orders
+        GROUP BY customer_id, YEAR(order_date)
+    ) g
+)
+
+SELECT customer_id
+FROM RANKED
+GROUP BY customer_id
+HAVING SUM(CASE WHEN r1=r2 THEN 1 ELSE 0 END) = MAX(order_year) - MIN(order_year) + 1
+
+
+
+-- Left Join but kinda self join 
+WITH CTE AS (
+SELECT 
+    customer_id,
+    YEAR(ORDER_DATE) AS ORDER_YEAR,
+    SUM(PRICE) AS PRICE
+FROM ORDERS 
+GROUP BY 1,2
+),
+
+CTE_3 AS (
+SELECT 
+    A.customer_id, 
+    COUNT(DISTINCT A.ORDER_YEAR) AS YEAR_1,
+    COUNT(DISTINCT B.ORDER_YEAR) AS YEAR_2  
+FROM CTE A
+LEFT JOIN CTE B
+ON A.CUSTOMER_ID = B.CUSTOMER_ID AND A.ORDER_YEAR+1=B.ORDER_YEAR AND A.PRICE<B.PRICE
+GROUP BY 1)
+
+SELECT DISTINCT CUSTOMER_ID 
+FROM CTE_3 
+WHERE YEAR_1=YEAR_2+1
+GROUP BY 1
+
+
+-- (My Solution - Created my own using understanding from other) 
+# Write your MySQL query statement below
+
+
+WITH RECURSIVE ALL_YEAR AS (
+    SELECT customer_id, YEAR(MIN(ORDER_DATE)) AS ORDER_YEAR, YEAR(MAX(ORDER_DATE)) AS MAX_YEAR FROM ORDERS GROUP BY 1
+    UNION ALL
+    SELECT customer_id, ORDER_YEAR+1 AS ALL_YEAR, MAX_YEAR FROM ALL_YEAR
+    WHERE ORDER_YEAR<MAX_YEAR
+),
+
+PRICE AS (
+    select A.customer_id, A.ORDER_YEAR, COALESCE(sum(B.price),0) as TOTAL
+    from ALL_YEAR A LEFT JOIN Orders B ON A.customer_id=B.customer_id AND A.ORDER_YEAR=YEAR(B.order_date)  
+    group by 1,2),
+
+
+RANK_USER AS (
+    SELECT *,
+    DENSE_RANK() OVER(PARTITION BY CUSTOMER_ID ORDER BY ORDER_YEAR) AS ORDER_YEAR_RANK,
+    DENSE_RANK() OVER(PARTITION BY CUSTOMER_ID ORDER BY TOTAL) AS PRICE_RANK
+    FROM PRICE  
+
+),
+
+GET_USERS AS (
+SELECT 
+    customer_id,
+    COUNT(DISTINCT CASE WHEN ORDER_YEAR_RANK=PRICE_RANK THEN ORDER_YEAR ELSE NULL END) AS TIMES_SAME,
+    MAX(ORDER_YEAR)-MIN(ORDER_YEAR)+1 AS NUM_YEAR
+FROM RANK_USER
+GROUP BY 1
+ORDER BY 1,2)
+
+SELECT customer_id 
+FROM GET_USERS
+WHERE TIMES_SAME=NUM_YEAR
+GROUP BY 1
