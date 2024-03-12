@@ -177,26 +177,6 @@ on a.customer_id=b.customer_id and a.years + 1 = b.years and b.total_price>a.tot
 so first or last row can have price greater or less than previous valu and still that would be considerred, in other cases it might work but in this edge case it won't work
 */
 
-
-WITH RANKED AS (
-    SELECT customer_id,
-            order_year,
-            RANK() OVER(PARTITION BY customer_id ORDER BY order_year) as r1,
-            RANK() OVER(PARTITION BY customer_id ORDER BY total) as r2
-    FROM (
-        SELECT customer_id, YEAR(order_date) AS order_year, SUM(price) AS total
-        FROM Orders
-        GROUP BY customer_id, YEAR(order_date)
-    ) g
-)
-
-SELECT customer_id
-FROM RANKED
-GROUP BY customer_id
-HAVING SUM(CASE WHEN r1=r2 THEN 1 ELSE 0 END) = MAX(order_year) - MIN(order_year) + 1
-
-
-
 -- Left Join but kinda self join 
 WITH CTE AS (
 SELECT 
@@ -210,8 +190,8 @@ GROUP BY 1,2
 CTE_3 AS (
 SELECT 
     A.customer_id, 
-    COUNT(DISTINCT A.ORDER_YEAR) AS YEAR_1,
-    COUNT(DISTINCT B.ORDER_YEAR) AS YEAR_2  
+        MAX(a.ORDER_YEAR)-MIN(a.ORDER_YEAR) AS num_years,
+    COUNT(DISTINCT B.ORDER_YEAR) AS year_shopping  
 FROM CTE A
 LEFT JOIN CTE B
 ON A.CUSTOMER_ID = B.CUSTOMER_ID AND A.ORDER_YEAR+1=B.ORDER_YEAR AND A.PRICE<B.PRICE
@@ -219,13 +199,11 @@ GROUP BY 1)
 
 SELECT DISTINCT CUSTOMER_ID 
 FROM CTE_3 
-WHERE YEAR_1=YEAR_2+1
+WHERE num_years=year_shopping
 GROUP BY 1
-
 
 -- (My Solution - Created my own using understanding from other) 
 # Write your MySQL query statement below
-
 
 WITH RECURSIVE ALL_YEAR AS (
     SELECT customer_id, YEAR(MIN(ORDER_DATE)) AS ORDER_YEAR, YEAR(MAX(ORDER_DATE)) AS MAX_YEAR FROM ORDERS GROUP BY 1
@@ -260,4 +238,44 @@ ORDER BY 1,2)
 SELECT customer_id 
 FROM GET_USERS
 WHERE TIMES_SAME=NUM_YEAR
+GROUP BY 1
+
+
+-- My Solution Using Lead
+
+# Write your MySQL query statement below
+
+
+WITH RECURSIVE ALL_YEAR AS (
+    SELECT customer_id, YEAR(MIN(ORDER_DATE)) AS ORDER_YEAR, YEAR(MAX(ORDER_DATE)) AS MAX_YEAR FROM ORDERS GROUP BY 1
+    UNION ALL
+    SELECT customer_id, ORDER_YEAR+1 AS ALL_YEAR, MAX_YEAR FROM ALL_YEAR
+    WHERE ORDER_YEAR<MAX_YEAR
+),
+
+PRICE AS (
+    select A.customer_id, A.ORDER_YEAR, COALESCE(sum(B.price),0) as TOTAL
+    from ALL_YEAR A LEFT JOIN Orders B ON A.customer_id=B.customer_id AND A.ORDER_YEAR=YEAR(B.order_date)  
+    group by 1,2),
+
+
+LEAD_USER AS (
+    SELECT *,
+    LEAD(TOTAL) OVER(PARTITION BY CUSTOMER_ID ORDER BY ORDER_YEAR) AS NEXT_TOTAL
+    FROM PRICE  
+
+),
+
+LEAD_VALUES AS (
+SELECT 
+    customer_id, 
+    COUNT(DISTINCT CASE WHEN NEXT_TOTAL>TOTAL THEN ORDER_YEAR ELSE NULL END) AS TIMES_BIG,
+    MAX(ORDER_YEAR)-MIN(ORDER_YEAR) AS YEAR_PRESENT 
+FROM LEAD_USER
+GROUP BY 1)
+
+
+SELECT customer_id 
+FROM LEAD_VALUES
+WHERE TIMES_BIG=YEAR_PRESENT
 GROUP BY 1
