@@ -92,8 +92,33 @@ What not to do, lets say
 WHERE A.available_from<DATE_SUB('2019-06-23',INTERVAL 1 MONTH)
 AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-23'
  
-You used AND after where, then you are also fintering the book where dispatch date wasn't in between those dates, even though we want those books, so we use AND in the join condition so we get the books and we also get the number of books sold as 0
+| book_id | name             | available_from | order_id | book_id | quantity | dispatch_date |
+| ------- | ---------------- | -------------- | -------- | ------- | -------- | ------------- |
+| 1       | Kalila And Demna | 2010-01-01     | 2        | 1       | 1        | 2018-11-05    |
+| 1       | Kalila And Demna | 2010-01-01     | 1        | 1       | 2        | 2018-07-26    |
 
+This is the result from above code, problem is all the book where dispact date wasn't in between are gone, 
+and that's what we need to find if they are no sales then its needs to be zero
+
+You used AND after where, then you are also fintering the book where dispatch date wasn't in between those dates, even though we want those books, so we use AND in the join condition so we get the books and we also get the number of books sold as 0, thing to remeber is if null value will also get filtered in where caluse so that's why we use it in join so that we can use coalesce.
+
+AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-23'
+
+
+SELECT 
+* from Books A
+left JOIN Orders B
+ON A.BOOK_ID = B.BOOK_ID AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-23'
+WHERE A.available_from<DATE_SUB('2019-06-23',INTERVAL 1 MONTH) 
+
+| book_id | name             | available_from | order_id | book_id | quantity | dispatch_date |
+| ------- | ---------------- | -------------- | -------- | ------- | -------- | ------------- |
+| 1       | Kalila And Demna | 2010-01-01     | 2        | 1       | 1        | 2018-11-05    |
+| 1       | Kalila And Demna | 2010-01-01     | 1        | 1       | 2        | 2018-07-26    |
+| 2       | 28 Letters       | 2012-05-12     | null     | null    | null     | null          |
+| 5       | The Hunger Games | 2008-09-21     | null     | null    | null     | null          |
+
+Now the quantity is null which you can use 
 */
 
 
