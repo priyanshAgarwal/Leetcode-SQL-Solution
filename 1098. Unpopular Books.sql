@@ -100,7 +100,7 @@ AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-
 This is the result from above code, problem is all the book where dispact date wasn't in between are gone, 
 and that's what we need to find if they are no sales then its needs to be zero
 
-You used AND after where, then you are also fintering the book where dispatch date wasn't in between those dates, even though we want those books, so we use AND in the join condition so we get the books and we also get the number of books sold as 0, thing to remeber is if null value will also get filtered in where caluse so that's why we use it in join so that we can use coalesce.
+You used AND after where, then you are also fintering the book where dispatch date wasn't in between those dates or not dispatched at all. (Eg. 28 Letters dipatch date was in year 2020 still we want that book where will filter out that book), even though we want those books, so we use AND in the join condition so we get the books and we also get the number of books sold as 0, thing to remeber is if null value will also get filtered in where caluse so that's why we use it in join so that we can use coalesce.
 
 AND DISPATCH_DATE BETWEEN DATE_ADD('2019-06-23', INTERVAL -1 YEAR) AND '2019-06-23'
 
