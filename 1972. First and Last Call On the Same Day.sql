@@ -73,19 +73,28 @@ On 2021-08-11, user 1 and 5 had a call. This call was the only call for both of 
 [8, 4, "2021-08-24", 4, 4], 
 [11, 3, "2021-08-17", 3, 8], 
 [11, 8, "2021-08-17", 3, 8]]}
+
+Earlier I was using MAX and MIN instead of FIRST_VALUE and LAST_VALUE which was 
+giving me max and min on the basis of user ID which was so stupid, so FIRST AND LAST VALUE
+
+The conclusion here is simple - MAX() is useful, but do not conflate it with LAST_VALUE() in time-based data. You might be skewing your results.
+
+
 */
 
-WITH CTE AS (
-select CALLER_ID AS USER_ID, RECIPIENT_ID AS RECIEVER_ID ,CALL_TIME from Calls
+with all_Callers as (
+select caller_id user_id, recipient_id as reciever_id  , call_time from Calls
 union 
-select RECIPIENT_ID AS USER_ID, CALLER_ID as  RECIEVER_ID ,CALL_TIME from Calls),
-            
-FIRST_LAST_CALL AS (
-    SELECT  USER_ID,
-first_value(reciever_id) over (partition by user_id,date(call_time) order by call_time) first_recipient_id,
-first_value(reciever_id) over (partition by user_id,date(call_time) order by  call_time desc) last_recipient_id   
-    FROM CTE
-)
+select recipient_id v, caller_id as  reciever_id ,call_time from Calls
+),
 
-SELECT DISTINCT USER_ID FROM FIRST_LAST_CALL
-WHERE first_recipient_id=last_recipient_id
+CTE2 AS (
+SELECT DISTINCT user_id, call_time,
+LAST_VALUE(reciever_id) OVER(PARTITION BY user_id, DAY(call_time)) AS LAST_USER,
+FIRST_VALUE(reciever_id) OVER(PARTITION BY user_id, DAY(call_time)) AS FIRST_USER 
+FROM all_Callers)
+
+
+SELECT user_id FROM CTE2
+WHERE LAST_USER=FIRST_USER
+GROUP BY 1
